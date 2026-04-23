@@ -36,11 +36,20 @@ namespace Game
 
     void Scene::OnUpdate(float dt)
     {
-        eventBus.Update();
-        hierarchy.OnUpdate(dt);
-        
         for (auto& layer : m_Layers)
             layer->OnUpdate(dt);
+
+        hierarchy.OnUpdate(dt);
+        eventBus.Update();
+        
+    }
+
+    void Scene::OnFixed(float step)
+    {
+        for (auto& layer : m_Layers)
+            layer->OnFixed(step);
+
+        AI.OnFixed(step);
     }
 
     void Scene::OnRender()
@@ -57,6 +66,5 @@ namespace Game
 
     void Scene::OnAttach()
     {
-        hierarchy.Init();
     }
 }

@@ -26,6 +26,7 @@ namespace Game::Entities
         auto& Geometry = registry.emplace<Core::Components::Geometry>(entity);
         auto& Enemy = registry.emplace<Game::Components::Enemy>(entity);
         
+        Humanoid.Speed = 150.f;
         Geometry = Core::Components::CreateDefaultGeometry(texture, sf::Color::White);
 
         registry.emplace<Game::Components::Sprite>(entity, EnemyTextureHandle); 

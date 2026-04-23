@@ -11,8 +11,6 @@
 #include "Types.hpp"
 #include "Engine/Window/Window.hpp"
 
-
-
 namespace Core::Rendering
 {
     class Renderer

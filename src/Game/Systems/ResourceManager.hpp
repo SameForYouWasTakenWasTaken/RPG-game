@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Engine/Systems/ISystem.hpp"
 #include "Global/Helpers.hpp"
 #include "SFML/Graphics/Texture.hpp"
 #include <exception>
@@ -11,7 +12,7 @@
 
 namespace Game::Systems
 {
-    class ResourceManager
+    class ResourceManager : public Core::Systems::ISystem
     {
         static inline std::unordered_map<Global::Types::TextureID, sf::Texture> m_TexturesHolder;
     public:
