@@ -15,3 +15,12 @@ include(Dependencies.cmake)
 
 add_executable(main src/main.cpp)
 target_link_libraries(main PUBLIC Game)
+
+install(TARGETS main)
+
+# Automatically copy all required DLLs on Windows
+if (WIN32)
+    install(FILES $<TARGET_RUNTIME_DLLS:main>
+            DESTINATION .
+    )
+endif()
