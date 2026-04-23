@@ -33,6 +33,7 @@ jobs:
       id: vars
       run: echo "BUILD_DIR=${{ github.workspace }}/build" >> $GITHUB_OUTPUT
       shell: bash
+      
 
     # Optional cache (safe-ish for your use case)
     - name: Cache build
