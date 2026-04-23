@@ -33,6 +33,7 @@ namespace Game
     
     void Application::Run()
     {
+        abc::Test();
         Core::Engine& engine = Core::Engine::Get();
         Core::Rendering::Renderer* renderer = engine.GetRenderer();
 
@@ -49,14 +50,15 @@ namespace Game
         sf::Clock clock;
         float then = clock.getElapsedTime().asSeconds();
         
-        constexpr float maxDelta = .5f;
+        constexpr float MAX_DELTA = .5f;
         constexpr int MAX_EVENTS = 50;
+        constexpr float STEP = 1.f / 60.f;
 
         while (m_Window.IsOpen())
         {   
             float now = clock.getElapsedTime().asSeconds();
             float dt = now - then;
-            dt = std::min(dt, maxDelta);
+            dt = std::min(dt, MAX_DELTA);
             then = now;
             
             int count = 0;
@@ -69,6 +71,7 @@ namespace Game
             renderer->Begin();
 
             MainScene.OnUpdate(dt);
+            MainScene.OnFixed(STEP);
             MainScene.OnRender();
 
             renderer->End();

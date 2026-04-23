@@ -11,9 +11,6 @@ namespace Game::Systems
 
     }
 
-    void Hierarchy::Init()
-    {}
-
     void Hierarchy::OnUpdate(float dt)
     {
         auto roots = m_SceneRegistry.view<Components::Hierarchy, Core::Components::Transform>();
@@ -22,9 +19,8 @@ namespace Game::Systems
         {
             auto& h = roots.get<Components::Hierarchy>(entity);
             if (h.Parent == entt::null)
-            {
                 UpdateRecursive(entity, glm::mat3(1.f));
-            }
+            
         }
     }
 

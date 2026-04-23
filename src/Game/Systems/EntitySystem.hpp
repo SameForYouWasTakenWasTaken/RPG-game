@@ -2,9 +2,10 @@
 
 #include "vendor/entt/entt.hpp"
 
+#include "Engine/Systems/ISystem.hpp"
 namespace Game::Systems
 {
-    class EntitySystem
+    class EntitySystem : public Core::Systems::ISystem
     {
         
     public:

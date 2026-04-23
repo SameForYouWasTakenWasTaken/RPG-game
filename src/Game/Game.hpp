@@ -5,6 +5,8 @@
 #include "GameSettings.hpp"
 #include "SFML/Window/Event.hpp"
 
+#include "wgergher/abc.hpp"
+
 namespace Game
 {
     class Application final {

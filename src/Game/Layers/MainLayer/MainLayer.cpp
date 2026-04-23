@@ -1,9 +1,7 @@
 #include <iostream>
+
 #include <tracy/Tracy.hpp>
-
-
 #include "MainLayer.hpp"
-#include "Components/Enemy.hpp"
 #include "Components/Humanoid.hpp"
 #include "Engine/Components/Geometry.hpp"
 #include "Engine/Engine.hpp"
@@ -11,8 +9,7 @@
 #include "Engine/Events/MouseEvent.hpp"
 #include "Engine/Events/WindowResizeEvent.hpp"
 #include "Engine/Renderer/Types.hpp"
-#include "Entities/Default.hpp"
-#include "Global/Helpers.hpp"
+#include "Events/AttackedEvent.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
 #include "SFML/System/Vector2.hpp"
@@ -25,8 +22,6 @@
 
 #include "Entities/Player.hpp"
 #include "Entities/Enemy.hpp"
-#include "glm/geometric.hpp"
-
 
 namespace Game::Layers
 {
@@ -62,46 +57,6 @@ namespace Game::Layers
 
                 if (walking)
                     CenterCameraToEntity(m_PlayerEntity);
-            }
-            
-            for (auto enemyEntity : enemyView)
-            {
-                auto& enemyTransform = registry.get<Core::Components::Transform>(enemyEntity);
-                auto& enemyHumanoid = registry.get<Components::Humanoid>(enemyEntity);
-                auto& enemyComponent = registry.get<Components::Enemy>(enemyEntity);
-
-                entt::entity nearestPlayer{entt::null};
-                Core::Components::Transform nearestPlayerTransform;
-                
-                // Get nearest player entity
-                for (auto playerEntity : playerView)
-                {
-                    auto& playerTransform = registry.get<Core::Components::Transform>(playerEntity);
-                   
-                    glm::vec2 delta = enemyTransform.GetLocalPosition() - playerTransform.GetLocalPosition();
-
-                    if  (glm::length(delta) > enemyComponent.PlayerDetectionDist)
-                        continue;
-
-                    if (nearestPlayer == entt::null)
-                    {
-                        nearestPlayer = playerEntity;
-                        nearestPlayerTransform = playerTransform;
-                        continue;   
-                    }
-
-                    if (glm::length(nearestPlayerTransform.GetLocalPosition()) > glm::length(playerTransform.GetLocalPosition()))
-                        nearestPlayerTransform = playerTransform;
-                    
-                }
-                
-                if (nearestPlayer == entt::null)
-                    continue;
-
-                // Approach nearest player
-                glm::vec2 direction = glm::normalize(nearestPlayerTransform.GetLocalPosition() - enemyTransform.GetLocalPosition());
-                enemyTransform.Move(direction * enemyHumanoid.Speed * dt);
-                
             }
         }
 
@@ -151,6 +106,7 @@ namespace Game::Layers
             m_Scene->eventBus.Sink<Core::Events::KeyPressedEvent>().connect<&MainLayer::OnKey>(this);
             m_Scene->eventBus.Sink<Core::Events::MouseClickEvent>().connect<&MainLayer::OnMouse>(this);
             m_Scene->eventBus.Sink<Core::Events::WindowResizeEvent>().connect<&MainLayer::OnWindowResize>(this);
+            m_Scene->eventBus.Sink<Game::Events::Attacked>().connect<&MainLayer::OnAttack>(this);
         }
 
         void MainLayer::OnMouse(Core::Events::MouseClickEvent& e)
@@ -169,7 +125,7 @@ namespace Game::Layers
 
                 sf::Vector2i mousePos = sf::Mouse::getPosition();
                 sf::Vector2i pixelPos = {mousePos.x, mousePos.y};
-                
+
                 auto& window = Core::Engine::Get().GetContext().ActiveWindow;
                 auto world = window->GetRenderWindow().mapPixelToCoords(pixelPos, window->View);
 
@@ -195,5 +151,17 @@ namespace Game::Layers
 
             window->View.setCenter(sf::Vector2f{pos.x, pos.y});
             window->ResetView();
+        }
+
+        void MainLayer::OnAttack(Game::Events::Attacked& e)
+        {
+            auto attacker = e.Attacker;
+            auto attackee = e.Attackee;
+            auto damage = e.DamageTaken;
+
+            auto& Humanoid = m_Scene->registry.get<Game::Components::Humanoid>(attackee);
+            Humanoid.Health -= damage;
+
+            std::cout << "Attacked an entity!\n" << "HP: " << Humanoid.Health << std::endl;
         }
 }

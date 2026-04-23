@@ -1,5 +1,6 @@
 file(GLOB_RECURSE GAME_SOURCES "*.cpp")
 
+
 add_library(Game STATIC ${GAME_SOURCES})
 
 target_include_directories(Game PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

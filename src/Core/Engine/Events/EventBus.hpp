@@ -12,7 +12,7 @@ namespace Core::Events
         EventBus() = default;
 
         template <typename TEventFire, typename... Args>
-        void Queue(Args&... args);
+        void Queue(Args&&... args);
 
         template <typename TEventFire, typename... Args>
         void Emit(Args&... args);
@@ -27,7 +27,7 @@ namespace Core::Events
     };
 
     template <typename TEventFire, typename... Args>
-    void EventBus::Queue(Args&... args)
+    void EventBus::Queue(Args&&... args)
     {
         m_Dispatcher.enqueue(TEventFire{std::forward<Args>(args)...});
     }

@@ -6,6 +6,7 @@
 #include <Engine/Events/EventBus.hpp>
 #include "Layer.hpp"
 
+#include "Systems/AI.hpp"
 #include "Systems/Hierarchy.hpp"
 #include "vendor/entt/entt.hpp"
 
@@ -23,11 +24,14 @@ namespace Game
         entt::registry registry{};
         Core::Events::EventBus eventBus;
         Game::Systems::Hierarchy hierarchy;
+
+        Game::Systems::AISystem AI{registry, eventBus};
         
         Scene();
         ~Scene();
 
         virtual void OnUpdate(float dt);
+        virtual void OnFixed(float step);
         virtual void OnRender();
 
         virtual void OnAttach();

@@ -2,12 +2,13 @@
 
 #include <glm/glm.hpp>
 #include "Engine/Events/EventBus.hpp"
+#include "Engine/Systems/ISystem.hpp"
 #include "vendor/entt/entt.hpp"
 
 
 namespace Game::Systems
 {
-    class Hierarchy
+    class Hierarchy : public Core::Systems::ISystem
     {
         entt::registry& m_SceneRegistry;
         Core::Events::EventBus& m_EventBus;
@@ -16,8 +17,7 @@ namespace Game::Systems
     public:
         Hierarchy(entt::registry& registry, Core::Events::EventBus& eventBus);
 
-        void Init();
-        void OnUpdate(float dt);
+        void OnUpdate(float dt) override;
         void AddChild(entt::entity parent, entt::entity child);
 
         void Traverse(entt::entity parent);

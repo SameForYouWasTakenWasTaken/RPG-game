@@ -5,6 +5,7 @@
 #include "Engine/Events/InputEvent.hpp"
 #include "Engine/Events/MouseEvent.hpp"
 #include "Engine/Events/WindowResizeEvent.hpp"
+#include "Events/AttackedEvent.hpp"
 
 namespace Game::Layers
 {
@@ -16,6 +17,7 @@ namespace Game::Layers
         void OnKey(Core::Events::KeyPressedEvent& e);
         void OnMouse(Core::Events::MouseClickEvent& e);
         void OnWindowResize(Core::Events::WindowResizeEvent& e);
+        void OnAttack(Game::Events::Attacked& e);
     public:
         MainLayer() = default;
 
