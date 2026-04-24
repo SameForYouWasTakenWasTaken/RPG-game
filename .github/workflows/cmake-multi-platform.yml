@@ -55,7 +55,8 @@ jobs:
         libvorbis-dev \
         libflac-dev \
         libmbedtls-dev \
-        xvfb
+        xvfb \
+        libssh2-1-dev
 
     - name: Install clang
       if: matrix.os == 'ubuntu-latest' && matrix.cpp_compiler == 'clang++'
