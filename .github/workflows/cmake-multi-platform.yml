@@ -42,19 +42,20 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y \
-          build-essential \
-          cmake \
-          libx11-dev \
-          libxrandr-dev \
-          libxcursor-dev \
-          libxi-dev \
-          libgl1-mesa-dev \
-          libudev-dev \
-          libfreetype6-dev \
-          libopenal-dev \
-          libvorbis-dev \
-          libflac-dev \
-          xvfb
+        build-essential \
+        cmake \
+        libx11-dev \
+        libxrandr-dev \
+        libxcursor-dev \
+        libxi-dev \
+        libgl1-mesa-dev \
+        libudev-dev \
+        libfreetype6-dev \
+        libopenal-dev \
+        libvorbis-dev \
+        libflac-dev \
+        libmbedtls-dev \
+        xvfb
 
     - name: Install clang
       if: matrix.os == 'ubuntu-latest' && matrix.cpp_compiler == 'clang++'
