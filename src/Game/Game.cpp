@@ -33,7 +33,6 @@ namespace Game
     
     void Application::Run()
     {
-        abc::Test();
         Core::Engine& engine = Core::Engine::Get();
         Core::Rendering::Renderer* renderer = engine.GetRenderer();
 
