@@ -1,4 +1,4 @@
-name: CMake SFML Pipeline
+name: CMake Pipeline (FetchContent)
 
 on:
   push:
@@ -19,23 +19,48 @@ jobs:
           - os: windows-latest
             c_compiler: cl
             cpp_compiler: cl
+
           - os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
+
           - os: ubuntu-latest
             c_compiler: clang
             cpp_compiler: clang++
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repo
+      uses: actions/checkout@v4
 
     - name: Set build dir
       id: vars
       run: echo "BUILD_DIR=${{ github.workspace }}/build" >> $GITHUB_OUTPUT
       shell: bash
-      
 
-    # Optional cache (safe-ish for your use case)
+    # 🔧 ONLY system deps (NO SFML here)
+    - name: Install Linux dependencies
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt update
+        sudo apt install -y \
+          build-essential \
+          cmake \
+          libx11-dev \
+          libxrandr-dev \
+          libxcursor-dev \
+          libxi-dev \
+          libgl1-mesa-dev \
+          libudev-dev \
+          libfreetype6-dev \
+          libopenal-dev \
+          libvorbis-dev \
+          libflac-dev \
+          xvfb
+
+    - name: Install clang
+      if: matrix.os == 'ubuntu-latest' && matrix.cpp_compiler == 'clang++'
+      run: sudo apt install -y clang
+
     - name: Cache build
       uses: actions/cache@v4
       with:
@@ -53,17 +78,22 @@ jobs:
     - name: Build
       run: cmake --build ${{ steps.vars.outputs.BUILD_DIR }} --config ${{ matrix.build_type }}
 
-    - name: Test
+    # 🧪 Headless-safe tests
+    - name: Test (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      working-directory: ${{ steps.vars.outputs.BUILD_DIR }}
+      run: xvfb-run ctest --build-config ${{ matrix.build_type }}
+
+    - name: Test (Windows)
+      if: matrix.os == 'windows-latest'
       working-directory: ${{ steps.vars.outputs.BUILD_DIR }}
       run: ctest --build-config ${{ matrix.build_type }}
 
-    # 🔥 Proper packaging step
     - name: Install (package)
       run: cmake --install ${{ steps.vars.outputs.BUILD_DIR }} --prefix install
 
-    # 📦 Upload clean runnable build
     - name: Upload package
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ runner.os }}-package
+        name: ${{ runner.os }}-${{ matrix.cpp_compiler }}-package
         path: install
