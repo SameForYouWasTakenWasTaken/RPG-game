@@ -10,6 +10,7 @@
 #include "Engine/Events/WindowResizeEvent.hpp"
 #include "Engine/Renderer/Types.hpp"
 #include "Events/AttackedEvent.hpp"
+#include "Events/Died.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
 #include "SFML/System/Vector2.hpp"
@@ -27,37 +28,34 @@ namespace Game::Layers
 {
         void MainLayer::OnUpdate(float dt) 
         {
-            ZoneScoped;
-            auto& registry = m_Scene->registry;
-            auto& window = Core::Engine::Get().GetContext().ActiveWindow; // TODO: Set camera position on player
+            bool walking = false;
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) ||
+                sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) ||
+                sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) ||
+                sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) ) 
+                    walking = true;
 
-            auto playerView = registry.view<Entities::PlayerTag>();
-            auto enemyView = registry.view<Entities::EnemyTag>();
+                        auto& registry = m_Scene->registry;
             
-            if (m_PlayerEntity != entt::null)
-            {
-                auto& transform = registry.get<Core::Components::Transform>(m_PlayerEntity);
-                auto& humanoid = registry.get<Components::Humanoid>(m_PlayerEntity);
-                float speed = humanoid.Speed * dt;
-                bool walking = false;
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) ||
-                    sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) ||
-                    sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) ||
-                    sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) ) 
-                        walking = true;
-                        
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
-                    transform.Move(glm::vec2{0.f, -speed});
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-                    transform.Move(glm::vec2{-speed, 0.f});
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-                    transform.Move(glm::vec2{0.f, speed});
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-                    transform.Move(glm::vec2{speed, 0.f});
+            auto& transform = registry.get<Core::Components::Transform>(m_PlayerEntity);
+            auto& humanoid = registry.get<Components::Humanoid>(m_PlayerEntity);
+            float speed = humanoid.Speed * dt;
+                    
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
+                transform.Move(glm::vec2{0.f, -speed});
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
+                transform.Move(glm::vec2{-speed, 0.f});
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
+                transform.Move(glm::vec2{0.f, speed});
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
+                transform.Move(glm::vec2{speed, 0.f});
+            
+            if (walking)
+                CenterCameraToEntity(m_PlayerEntity);
+        }
 
-                if (walking)
-                    CenterCameraToEntity(m_PlayerEntity);
-            }
+        void MainLayer::OnFixed(float step)
+        {
         }
 
         void MainLayer::OnRender() 
@@ -107,10 +105,16 @@ namespace Game::Layers
             m_Scene->eventBus.Sink<Core::Events::MouseClickEvent>().connect<&MainLayer::OnMouse>(this);
             m_Scene->eventBus.Sink<Core::Events::WindowResizeEvent>().connect<&MainLayer::OnWindowResize>(this);
             m_Scene->eventBus.Sink<Game::Events::Attacked>().connect<&MainLayer::OnAttack>(this);
+            m_Scene->eventBus.Sink<Game::Events::Died>().connect<&MainLayer::OnDeath>(this);
         }
 
         void MainLayer::OnMouse(Core::Events::MouseClickEvent& e)
         {
+        }
+
+        void MainLayer::OnDeath(Game::Events::Died& e)
+        {
+            std::cout << "Entity died!" << std::endl;
         }
 
         void MainLayer::OnKey(Core::Events::KeyPressedEvent& e)

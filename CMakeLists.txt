@@ -9,12 +9,22 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 #     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithDebInfo")
 # endif()
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(RESOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/Game/Resources")
+
 add_subdirectory(src)
 
 include(Dependencies.cmake)
 
+
 add_executable(main src/main.cpp)
 target_link_libraries(main PUBLIC Game)
+
+add_custom_command(TARGET main POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${RESOURCES_DIR}
+    $<TARGET_FILE_DIR:main>/Resources
+)
 
 install(TARGETS main)
 

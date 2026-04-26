@@ -6,6 +6,7 @@
 #include "Engine/Events/MouseEvent.hpp"
 #include "Engine/Events/WindowResizeEvent.hpp"
 #include "Events/AttackedEvent.hpp"
+#include "Events/Died.hpp"
 
 namespace Game::Layers
 {
@@ -18,10 +19,17 @@ namespace Game::Layers
         void OnMouse(Core::Events::MouseClickEvent& e);
         void OnWindowResize(Core::Events::WindowResizeEvent& e);
         void OnAttack(Game::Events::Attacked& e);
+        void OnDeath(Game::Events::Died& e);
+
+        bool PlayerLeft = false;
+        bool PlayerRight = false;
+        bool PlayerUp = false;
+        bool PlayerDown = false;
     public:
         MainLayer() = default;
 
         void OnUpdate(float dt) override;
+        void OnFixed(float step) override;
         void OnRender() override;
         void OnAttach() override;
         void OnDetach() override;

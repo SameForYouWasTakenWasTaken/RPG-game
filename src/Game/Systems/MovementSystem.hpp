@@ -16,7 +16,5 @@ namespace Game::Systems
         
         
         static void LinearGoTo(Core::Components::Transform& Transform, const glm::vec2& targetPos, float speed);
-
-        void OnFixed(float step) override;
     };
 }

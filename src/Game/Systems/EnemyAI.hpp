@@ -26,6 +26,6 @@ namespace Game::Systems
         bool CanEnemyHear(entt::entity enemy, entt::entity other);
         bool CanEnemySee(entt::entity enemy, entt::entity other);
         
-        void OnFixed(float step) override;
+        void OnUpdate(float dt) override;
     }; 
 }
