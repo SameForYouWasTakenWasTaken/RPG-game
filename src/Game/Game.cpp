@@ -35,9 +35,7 @@ namespace Game
     {
         Core::Engine& engine = Core::Engine::Get();
         Core::Rendering::Renderer* renderer = engine.GetRenderer();
-
-        if (!renderer)
-            throw std::runtime_error("Renderer not defined!");
+        assert(renderer);
 
         Core::EngineContext& context = engine.GetContext(); 
 
@@ -54,7 +52,7 @@ namespace Game
         constexpr float STEP = 1.f / 60.f;
 
         while (m_Window.IsOpen())
-        {   
+        {
             float now = clock.getElapsedTime().asSeconds();
             float dt = now - then;
             dt = std::min(dt, MAX_DELTA);

@@ -39,9 +39,12 @@ namespace Game
         for (auto& layer : m_Layers)
             layer->OnUpdate(dt);
 
-        hierarchy.OnUpdate(dt);
         eventBus.Update();
+        hierarchy.OnUpdate(dt);
+
         
+        AI.OnUpdate(dt);
+        Combat.OnUpdate(dt);
     }
 
     void Scene::OnFixed(float step)

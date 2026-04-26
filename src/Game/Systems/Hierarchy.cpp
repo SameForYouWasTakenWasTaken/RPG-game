@@ -26,6 +26,8 @@ namespace Game::Systems
 
     void Hierarchy::UpdateRecursive(entt::entity entity, const glm::mat3& parentWorld)
     {
+        assert(entity != entt::null);
+
         auto& hierarchy = m_SceneRegistry.get<Components::Hierarchy>(entity);
         auto& transform = m_SceneRegistry.get<Core::Components::Transform>(entity);
 
@@ -55,6 +57,14 @@ namespace Game::Systems
 
     void Hierarchy::AddChild(entt::entity parent, entt::entity child)
     {
+        assert(parent == entt::null);
+        assert(child == entt::null);
+
+        if(
+            !m_SceneRegistry.all_of<Components::Hierarchy>(parent) ||
+            !m_SceneRegistry.all_of<Components::Hierarchy>(parent)
+        ) return;
+
         auto& p = m_SceneRegistry.get<Components::Hierarchy>(parent);
         auto& c = m_SceneRegistry.get<Components::Hierarchy>(child);
 
@@ -72,7 +82,7 @@ namespace Game::Systems
                     *it = c.NextSibling;
                     break;
                 }
-
+                
                 it = &m_SceneRegistry.get<Components::Hierarchy>(*it).NextSibling;
             }
         }

@@ -4,6 +4,7 @@
 #include "Engine/Components/Geometry.hpp"
 #include "Engine/Components/Transform.hpp"
 #include "Systems/ResourceManager.hpp"
+#include "Weapon.hpp"
 #include "vendor/entt/entt.hpp"
 #include "Components/Sprite.hpp"
 #include "Components/Humanoid.hpp"
@@ -25,6 +26,9 @@ namespace Game::Entities
         auto& Geometry = registry.emplace<Core::Components::Geometry>(entity);
 
         auto& texture = Systems::ResourceManager::GetTexture(PlayerTextureHandle);
+        
+        auto& weapon = registry.emplace<Game::Weapons::Weapon>(entity);
+        
         Geometry = Core::Components::CreateDefaultGeometry(texture, sf::Color::White);
         registry.emplace<Game::Components::Sprite>(entity, PlayerTextureHandle); 
         registry.emplace<PlayerTag>(entity);

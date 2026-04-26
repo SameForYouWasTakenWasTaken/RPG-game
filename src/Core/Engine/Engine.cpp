@@ -1,4 +1,5 @@
 #include "Engine.hpp"
+#include <cassert>
 
 using namespace Core::Events;
 
@@ -19,7 +20,7 @@ namespace Core
     {
         // Unload cached events
         m_EventBus.Update();
-
+        
         if (IsSFMLEvent<sf::Event::Closed>(event))
             m_EventBus.Emit <WindowCloseEvent>();
 

@@ -6,8 +6,10 @@
 #include <Engine/Events/EventBus.hpp>
 #include "Layer.hpp"
 
-#include "Systems/AI.hpp"
+#include "Systems/CombatSystem.hpp"
+#include "Systems/EnemyAI.hpp"
 #include "Systems/Hierarchy.hpp"
+#include "Systems/MovementSystem.hpp"
 #include "vendor/entt/entt.hpp"
 
 namespace Game::Layers
@@ -22,10 +24,15 @@ namespace Game
         std::vector<std::shared_ptr<Layers::ILayer>> m_Layers{};
     public:
         entt::registry registry{};
+
+        // Required systems
         Core::Events::EventBus eventBus;
         Game::Systems::Hierarchy hierarchy;
-
+        
+        // Basic systems
         Game::Systems::AISystem AI{registry, eventBus};
+        Game::Systems::Combat Combat{registry, eventBus};
+        Game::Systems::Movement Movement{registry};
         
         Scene();
         ~Scene();
