@@ -5,17 +5,21 @@
 #include "Entities/Weapon.hpp"
 #include "Events/AttackedEvent.hpp"
 #include "Events/Died.hpp"
-
+#include "Components/States/Death.hpp"
 namespace Game::Systems
 {
     void Combat::HandleHumanoids()
     {
-        auto humanoids = m_SceneRegistry.view<Game::Components::Humanoid>();
-        for (auto entity : humanoids)
+        auto AliveHumanoids = m_SceneRegistry.view<Game::Components::Humanoid>(entt::exclude<Game::Components::Dead>);
+
+        for (auto entity : AliveHumanoids)
         {
             auto& humanoid = m_SceneRegistry.get<Game::Components::Humanoid>(entity);
             if (humanoid.Health <= 0)
-                m_EventBus.Emit<Game::Events::Died>(entity);   
+            {
+                m_EventBus.Emit<Game::Events::Died>(entity); 
+                m_SceneRegistry.emplace<Game::Components::Dead>(entity); // Assign it dead
+            }
         }
     }
 

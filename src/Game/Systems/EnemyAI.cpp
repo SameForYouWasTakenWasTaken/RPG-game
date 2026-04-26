@@ -1,6 +1,7 @@
 #include "EnemyAI.hpp"
 #include "Components/Enemy.hpp"
 #include "Components/Humanoid.hpp"
+#include "Components/States/Death.hpp"
 #include "Engine/Components/Transform.hpp"
 #include "Entities/Enemy.hpp"
 #include "Entities/Player.hpp"
@@ -17,7 +18,7 @@ namespace Game::Systems
         return m_SceneRegistry.view<                
                 Entities::PlayerTag, 
                 Core::Components::Transform,
-                Game::Components::Humanoid>();
+                Game::Components::Humanoid>(entt::exclude<Game::Components::Dead>);
     }
 
     entt::entity AISystem::GetNearestPlayer(const glm::vec2& nearestEnemyPos)
@@ -38,7 +39,7 @@ namespace Game::Systems
 
         return targetPlayer;
     }
-    void AISystem::OnFixed(float step)
+    void AISystem::OnUpdate(float dt)
     {
         auto enemies = m_SceneRegistry.view<
             Entities::EnemyTag,
@@ -68,7 +69,7 @@ namespace Game::Systems
             auto dist = glm::distance(playerTransform.GetWorldPos(), enemyTransform.GetWorldPos());
             
             if (dist >= enemyComp.PlayerMaxDistance)
-                ChaseEntity(enemy, targetPlayer, step);
+                ChaseEntity(enemy, targetPlayer, dt);
 
             if (Combat::InAttackRange(m_SceneRegistry, enemy, targetPlayer))
                 Combat::AttackEntity(m_SceneRegistry, m_SceneEventBus, enemy, targetPlayer);
@@ -127,7 +128,7 @@ namespace Game::Systems
         auto& playerTransform = m_SceneRegistry.get<Core::Components::Transform>(other);
         auto& enemyComponent = m_SceneRegistry.get<Components::Enemy>(enemy);
 
-        Movement::LinearGoTo(enemyTransform, playerTransform.GetWorldPos(), enemyHumanoid.Speed * dt);
+        Movement::LinearGoTo(enemyTransform, playerTransform.GetWorldPos(), enemyHumanoid.RunSpeed * dt);
         m_SceneRegistry.emplace_or_replace<Game::Components::Chasing>(enemy);
     }
 }
