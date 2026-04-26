@@ -7,7 +7,7 @@ target_link_libraries(Game PUBLIC Core)
 
 # For workflow
 install(DIRECTORY ${RESOURCES_DIR}
-        DESTINATION bin/Resources)
+        DESTINATION bin/)
 
 target_compile_definitions(Game PRIVATE
     RESOURCES_DIRECTORY=\"Resources/\"
