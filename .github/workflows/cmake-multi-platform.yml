@@ -36,7 +36,14 @@ jobs:
       run: echo "BUILD_DIR=${{ github.workspace }}/build" >> $GITHUB_OUTPUT
       shell: bash
 
-    # 🔧 ONLY system deps (NO SFML here)
+    # 🔥 Enable core dumps (Linux)
+    - name: Enable core dumps
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        ulimit -c unlimited
+        echo "/tmp/core.%e.%p" | sudo tee /proc/sys/kernel/core_pattern
+
+    # 🔧 ONLY system deps
     - name: Install Linux dependencies
       if: matrix.os == 'ubuntu-latest'
       run: |
@@ -44,6 +51,7 @@ jobs:
         sudo apt install -y \
         build-essential \
         cmake \
+        gdb \
         libx11-dev \
         libxrandr-dev \
         libxcursor-dev \
@@ -69,6 +77,7 @@ jobs:
         path: build
         key: ${{ runner.os }}-${{ matrix.cpp_compiler }}-${{ hashFiles('**/CMakeLists.txt') }}
 
+    # 🔥 Configure with debug symbols + sanitizers (Linux only)
     - name: Configure
       run: >
         cmake -B ${{ steps.vars.outputs.BUILD_DIR }}
@@ -76,20 +85,40 @@ jobs:
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+        ${{ matrix.os == 'ubuntu-latest' && '-DCMAKE_CXX_FLAGS="-O2 -g -fsanitize=address,undefined"' || '' }}
 
     - name: Build
       run: cmake --build ${{ steps.vars.outputs.BUILD_DIR }} --config ${{ matrix.build_type }}
 
-    # 🧪 Headless-safe tests
+    # 🧪 Tests with sanitizer output
     - name: Test (Linux)
       if: matrix.os == 'ubuntu-latest'
       working-directory: ${{ steps.vars.outputs.BUILD_DIR }}
-      run: xvfb-run ctest --build-config ${{ matrix.build_type }}
+      run: |
+        export ASAN_OPTIONS=detect_leaks=1:abort_on_error=1
+        xvfb-run ctest --output-on-failure --build-config ${{ matrix.build_type }}
 
     - name: Test (Windows)
       if: matrix.os == 'windows-latest'
       working-directory: ${{ steps.vars.outputs.BUILD_DIR }}
-      run: ctest --build-config ${{ matrix.build_type }}
+      run: ctest --output-on-failure --build-config ${{ matrix.build_type }}
+
+    # 🔥 Collect core dumps if crash happened
+    - name: Collect core dumps
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        mkdir -p core_dumps
+        cp /tmp/core.* core_dumps/ || true
+
+    # 🔥 Upload debug artifacts
+    - name: Upload debug artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: debug-${{ runner.os }}-${{ matrix.cpp_compiler }}
+        path: |
+          build
+          core_dumps
 
     - name: Install (package)
       run: cmake --install ${{ steps.vars.outputs.BUILD_DIR }} --prefix install

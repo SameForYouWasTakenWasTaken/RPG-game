@@ -11,6 +11,7 @@ namespace Core::Events
         unsigned int Width;
         unsigned int Height;
 
+
         WindowResizeEvent(unsigned int x, unsigned int y)
         : Width(x), Height(y) {}
     };

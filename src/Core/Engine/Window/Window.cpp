@@ -12,6 +12,9 @@ namespace Core::Rendering
 {
     Window::Window(WindowData settings)  : m_Data(settings)
     {
+        assert(settings.width >= 0);
+        assert(settings.height >= 0);
+
         m_Window = sf::RenderWindow(
             sf::VideoMode({m_Data.width, m_Data.height}), 
             m_Data.title,

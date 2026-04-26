@@ -32,6 +32,6 @@ namespace Core
 
         EngineContext& GetContext() { return m_Context; }
         Events::EventBus& GetEventBus() { return m_EventBus; }
-        Rendering::Renderer* GetRenderer() {return m_Renderer.get();}
+        Rendering::Renderer* GetRenderer() {assert(m_Renderer); return m_Renderer.get();}
     };
 }
