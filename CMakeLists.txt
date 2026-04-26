@@ -13,6 +13,8 @@ add_subdirectory(src)
 
 include(Dependencies.cmake)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 add_executable(main src/main.cpp)
 target_link_libraries(main PUBLIC Game)
 
