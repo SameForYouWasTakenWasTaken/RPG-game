@@ -13,12 +13,10 @@ add_custom_command(TARGET Game POST_BUILD
     $<TARGET_FILE_DIR:Game>/Resources
 )
 
-
 # For workflow
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Resources
+install(DIRECTORY $<TARGET_FILE_DIR:Game>/Resources
         DESTINATION Resources)
 
-# Always relative to executable directory (best practice)
 target_compile_definitions(Game PRIVATE
     RESOURCES_DIRECTORY="Resources/"
 )
