@@ -123,11 +123,11 @@ namespace Game::Layers
                 auto enemy = Entities::CreateEnemyEntity(registry);
                 auto& Transform = registry.get<Core::Components::Transform>(enemy);
 
-                sf::Vector2i mousePos = sf::Mouse::getPosition();
-                sf::Vector2i pixelPos = {mousePos.x, mousePos.y};
-
                 auto& window = Core::Engine::Get().GetContext().ActiveWindow;
-                auto world = window->GetRenderWindow().mapPixelToCoords(pixelPos, window->View);
+                auto& rw = window->GetRenderWindow();
+
+                sf::Vector2i pixelPos = sf::Mouse::getPosition(rw);
+                auto world = rw.mapPixelToCoords(pixelPos, window->View);
 
 
                 Transform.SetPosition({world.x, world.y});
