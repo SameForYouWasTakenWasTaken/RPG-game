@@ -47,7 +47,7 @@ namespace Game
         sf::Clock clock;
         float then = clock.getElapsedTime().asSeconds();
         
-        constexpr float MAX_DELTA = .5f;
+        constexpr float MAX_DELTA = .05f;
         constexpr int MAX_EVENTS = 50;
         constexpr float STEP = 1.f / 60.f;
 
