@@ -13,7 +13,7 @@ namespace Game::Systems
         Core::Events::EventBus& m_EventBus;
 
         void HandleWeapons(float dt);
-        void HandleHumanoids();
+        void HandleHumanoids(float dt);
     public:
         Combat(entt::registry& registry, Core::Events::EventBus& eventBus) 
         :  m_SceneRegistry(registry), m_EventBus(eventBus) {}

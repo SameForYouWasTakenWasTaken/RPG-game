@@ -8,17 +8,33 @@
 #include "Components/States/Death.hpp"
 namespace Game::Systems
 {
-    void Combat::HandleHumanoids()
+    void Combat::HandleHumanoids(float dt)
     {
         auto AliveHumanoids = m_SceneRegistry.view<Game::Components::Humanoid>(entt::exclude<Game::Components::Dead>);
 
         for (auto entity : AliveHumanoids)
         {
             auto& humanoid = m_SceneRegistry.get<Game::Components::Humanoid>(entity);
-            if (humanoid.Health <= 0)
+            const bool isAlive = humanoid.Health > 0;
+
+            if (!isAlive)
             {
                 m_EventBus.Emit<Game::Events::Died>(entity); 
                 m_SceneRegistry.emplace<Game::Components::Dead>(entity); // Assign it dead
+            }
+            
+            if (humanoid.CanRegenerateHP)
+            {
+                if (humanoid.timer_HealthRegen >= humanoid.RegenerateSpeed)
+                {
+                    humanoid.timer_HealthRegen -= humanoid.RegenerateSpeed;
+                    
+                    humanoid.Health = std::min(
+                        humanoid.Health + humanoid.RegenerateHP,
+                        humanoid.MaxHealth
+                    );
+                }
+                humanoid.timer_HealthRegen += dt;
             }
         }
     }
@@ -50,7 +66,7 @@ namespace Game::Systems
     {
 
         HandleWeapons(dt);
-        HandleHumanoids();
+        HandleHumanoids(dt);
     }
 
     bool Combat::InHitWindow(const Weapons::Weapon& weapon)
