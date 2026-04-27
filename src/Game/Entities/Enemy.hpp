@@ -28,7 +28,8 @@ namespace Game::Entities
 
         auto& weapon = registry.emplace<Game::Weapons::Weapon>(entity);
         
-        Humanoid.Speed = 150.f;
+        Humanoid.Speed = 300.f;
+        Humanoid.RunSpeed = Humanoid.Speed * 1.2;
         Humanoid.BaseDamage = 5.f;
         Humanoid.Health = 30.f;
         
