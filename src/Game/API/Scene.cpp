@@ -45,6 +45,7 @@ namespace Game
         
         AI.OnUpdate(dt);
         Combat.OnUpdate(dt);
+        Pickup.OnUpdate(dt);
     }
 
     void Scene::OnFixed(float step)

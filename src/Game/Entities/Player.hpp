@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Components/HierarchyComponent.hpp"
+#include "Components/Inventory.hpp"
 #include "Engine/Components/Geometry.hpp"
 #include "Engine/Components/Transform.hpp"
 #include "Systems/ResourceManager.hpp"
@@ -28,6 +29,7 @@ namespace Game::Entities
         auto& texture = Systems::ResourceManager::GetTexture(PlayerTextureHandle);
         
         auto& weapon = registry.emplace<Game::Weapons::Weapon>(entity);
+        auto& inventory = registry.emplace<Game::Components::Inventory>(entity);
         
         Geometry = Core::Components::CreateDefaultGeometry(texture, sf::Color::White);
         registry.emplace<Game::Components::Sprite>(entity, PlayerTextureHandle); 

@@ -11,6 +11,7 @@
 #include "Systems/Hierarchy.hpp"
 #include "Systems/MovementSystem.hpp"
 #include "Systems/InventorySystem.hpp"
+#include "Systems/PickupSystem.hpp"
 #include "vendor/entt/entt.hpp"
 
 namespace Game::Layers
@@ -35,6 +36,7 @@ namespace Game
         Game::Systems::Combat Combat{registry, eventBus};
         
         Game::Systems::Inventory Inventory{registry};
+        Game::Systems::Pickup Pickup{registry};
         Game::Systems::Movement Movement{registry};
         
         Scene();
