@@ -12,6 +12,7 @@
 #include "Engine/Events/WindowResizeEvent.hpp"
 #include "Engine/Renderer/Types.hpp"
 #include "Entities/Weapon.hpp"
+#include "Entities/Coin.hpp"
 #include "Events/AttackedEvent.hpp"
 #include "Events/Died.hpp"
 #include "SFML/Graphics/Sprite.hpp"
@@ -76,7 +77,6 @@ namespace Game::Layers
                 Core::Components::Geometry& geometry
             ){
                 if (!sprite.TextureHandle.IsValid()) return;
-                
                 const sf::Texture& texture = Systems::ResourceManager::GetTexture(sprite.TextureHandle);
                 
                 Core::Rendering::RenderObject obj{sprite.TextureHandle, &texture, transform, geometry};
@@ -122,11 +122,10 @@ namespace Game::Layers
 
         void MainLayer::OnKey(Core::Events::KeyPressedEvent& e)
         {
+            auto& registry = m_Scene->registry;
             
             if (e.key == sf::Keyboard::Key::F)
             {
-                auto& registry = m_Scene->registry;
-
                 auto enemy = Entities::CreateEnemyEntity(registry);
                 auto& Transform = registry.get<Core::Components::Transform>(enemy);
 
@@ -136,7 +135,22 @@ namespace Game::Layers
                 sf::Vector2i pixelPos = sf::Mouse::getPosition(rw);
                 auto world = rw.mapPixelToCoords(pixelPos, window->View);
 
+                Transform.SetPosition({world.x, world.y});
+                Transform.Move(-Transform.GetLocalSize() / 2.f);
+            }
 
+            if (e.key == sf::Keyboard::Key::G)
+            {
+                auto& window = Core::Engine::Get().GetContext().ActiveWindow;
+                auto& rw = window->GetRenderWindow();
+
+                sf::Vector2i pixelPos = sf::Mouse::getPosition(rw);
+                auto world = rw.mapPixelToCoords(pixelPos, window->View);
+                
+                auto coin = Game::Entities::CreateCoin(registry);
+                
+                auto& Transform = registry.get<Core::Components::Transform>(coin);
+                
                 Transform.SetPosition({world.x, world.y});
                 Transform.Move(-Transform.GetLocalSize() / 2.f);
             }
