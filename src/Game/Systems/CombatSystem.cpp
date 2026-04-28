@@ -64,7 +64,7 @@ namespace Game::Systems
     }
     void Combat::OnUpdate(float dt)
     {
-
+        
         HandleWeapons(dt);
         HandleHumanoids(dt);
     }
