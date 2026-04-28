@@ -10,6 +10,7 @@
 #include "Systems/EnemyAI.hpp"
 #include "Systems/Hierarchy.hpp"
 #include "Systems/MovementSystem.hpp"
+#include "Systems/InventorySystem.hpp"
 #include "vendor/entt/entt.hpp"
 
 namespace Game::Layers
@@ -32,6 +33,8 @@ namespace Game
         // Basic systems
         Game::Systems::AISystem AI{registry, eventBus};
         Game::Systems::Combat Combat{registry, eventBus};
+        
+        Game::Systems::Inventory Inventory{registry};
         Game::Systems::Movement Movement{registry};
         
         Scene();
