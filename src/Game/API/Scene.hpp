@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <Engine/Events/EventBus.hpp>
+#include "Engine/Systems/Scheduler.hpp"
 #include "Layer.hpp"
 
 #include "Systems/CombatSystem.hpp"
@@ -24,6 +25,7 @@ namespace Game
     class Scene
     {
         std::vector<std::shared_ptr<Layers::ILayer>> m_Layers{};
+        Core::Systems::Scheduler<Core::Systems::ISystem> m_SystemsScheduler;
     public:
         entt::registry registry{};
 

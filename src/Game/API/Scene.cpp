@@ -1,4 +1,5 @@
 #include "Scene.hpp"
+#include "Engine/Systems/ISystem.hpp"
 
 namespace Game
 {
@@ -40,12 +41,10 @@ namespace Game
             layer->OnUpdate(dt);
 
         eventBus.Update();
-        hierarchy.OnUpdate(dt);
-
         
-        AI.OnUpdate(dt);
-        Combat.OnUpdate(dt);
-        Pickup.OnUpdate(dt);
+        m_SystemsScheduler.RunAll([dt](Core::Systems::ISystem& system){
+            system.OnUpdate(dt);
+        });
     }
 
     void Scene::OnFixed(float step)
@@ -53,7 +52,9 @@ namespace Game
         for (auto& layer : m_Layers)
             layer->OnFixed(step);
 
-        AI.OnFixed(step);
+        m_SystemsScheduler.RunAll([step](Core::Systems::ISystem& system){
+            system.OnFixed(step);
+        });
     }
 
     void Scene::OnRender()
@@ -70,5 +71,11 @@ namespace Game
 
     void Scene::OnAttach()
     {
+        m_SystemsScheduler.Add(hierarchy);
+        m_SystemsScheduler.Add(Movement);
+        m_SystemsScheduler.Add(AI);
+        m_SystemsScheduler.Add(Combat);
+        m_SystemsScheduler.Add(Pickup);
+        m_SystemsScheduler.Add(Inventory);
     }
 }
