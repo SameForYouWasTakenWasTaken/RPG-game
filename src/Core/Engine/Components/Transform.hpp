@@ -11,13 +11,14 @@ namespace Core::Components
     {
         glm::vec2 LocalPosition = {0.f, 0.f};
         glm::vec2 LocalSize =     {1.f, 1.f};
+        glm::vec2 LocalOrigin =     {0.f, 0.f};
         sf::Angle LocalRotation = sf::Angle(sf::degrees(0.f));
 
     public:
         glm::mat3 LocalMatrix{1.f};
         glm::mat3 WorldMatrix{1.f};
 
-        bool Dirty = false;
+        bool Dirty = true;
         
         inline sf::Transform ToSFML() const
         {
@@ -37,12 +38,15 @@ namespace Core::Components
 
         const glm::mat3& ComputeMatrix(const Transform& t)
         {
+            glm::vec2 originLocal = t.GetLocalOrigin() / t.GetLocalSize();
+            
             glm::mat3 T = glm::translate(glm::mat3(1.f), t.GetLocalPosition());
             glm::mat3 R = glm::rotate(glm::mat3(1.f), t.GetLocalRotation().asRadians());
             glm::mat3 S = glm::scale(glm::mat3(1.f), t.GetLocalSize());
+            glm::mat3 O = glm::translate(glm::mat3(1.f),-originLocal);
             
             LocalMatrix = glm::mat3(1.f);
-            LocalMatrix = T * R * S;
+            LocalMatrix = T * R * S * O;
 
             return LocalMatrix;
         }
@@ -83,9 +87,20 @@ namespace Core::Components
             Dirty = true;
         }
 
+        void SetOrigin(const glm::vec2 origin)
+        {
+            LocalOrigin = origin;
+            Dirty = true;
+        }
+
         const glm::vec2& GetLocalPosition() const
         {
             return LocalPosition;
+        }
+
+        const glm::vec2& GetLocalOrigin() const
+        {
+            return LocalOrigin;
         }
         const glm::vec2& GetLocalSize() const
         {

@@ -37,11 +37,11 @@ namespace Game
 
     void Scene::OnUpdate(float dt)
     {
-        for (auto& layer : m_Layers)
-            layer->OnUpdate(dt);
-
         eventBus.Update();
         
+        for (auto& layer : m_Layers)
+            layer->OnUpdate(dt);
+    
         m_SystemsScheduler.RunAll([dt](Core::Systems::ISystem& system){
             system.OnUpdate(dt);
         });

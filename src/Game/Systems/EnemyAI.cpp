@@ -29,7 +29,9 @@ namespace Game::Systems
         for (auto player : GetPlayers())
         {
             auto& PlayerTransform = m_SceneRegistry.get<Core::Components::Transform>(player);
-            float dist = glm::distance(PlayerTransform.GetWorldPos(), nearestEnemyPos);
+            auto playerOriginPosition = PlayerTransform.GetWorldPos() + PlayerTransform.GetLocalOrigin();
+            float dist = glm::distance(playerOriginPosition, nearestEnemyPos);
+            
             if (dist < bestDist)
             {
                 bestDist = dist;

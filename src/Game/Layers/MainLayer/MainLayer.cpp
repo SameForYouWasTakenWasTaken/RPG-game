@@ -136,7 +136,6 @@ namespace Game::Layers
                 auto world = rw.mapPixelToCoords(pixelPos, window->View);
 
                 Transform.SetPosition({world.x, world.y});
-                Transform.Move(-Transform.GetLocalSize() / 2.f);
             }
 
             if (e.key == sf::Keyboard::Key::G)
@@ -152,7 +151,6 @@ namespace Game::Layers
                 auto& Transform = registry.get<Core::Components::Transform>(coin);
                 
                 Transform.SetPosition({world.x, world.y});
-                Transform.Move(-Transform.GetLocalSize() / 2.f);
             }
         }
 
@@ -168,7 +166,7 @@ namespace Game::Layers
             auto& transform = m_Scene->registry.get<Core::Components::Transform>(player);
 
             glm::vec2 pos = transform.GetWorldPos();
-            pos += transform.GetLocalSize();
+            pos += transform.GetLocalOrigin();
 
             window->View.setCenter(sf::Vector2f{pos.x, pos.y});
             window->ResetView();

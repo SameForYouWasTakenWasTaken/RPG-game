@@ -36,6 +36,8 @@ namespace Game::Entities
         registry.emplace<PlayerTag>(entity);
 
         Transform.Scale({150.f, 150.f});
+        Transform.SetOrigin(Transform.GetLocalSize() / 2.f);
+
         Humanoid.Speed = 500.f;
 
         return entity;
