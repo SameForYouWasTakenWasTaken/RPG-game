@@ -28,12 +28,13 @@ namespace Game::Systems
         auto& pickable = m_SceneRegistry.get<Components::Pickable>(item);
         pickable.CanBePicked = false;
 
-        if (!Inventory::AddItem(m_SceneRegistry, picker, item))
+        const bool added = Inventory::AddItem(m_SceneRegistry, picker, item);
+        if (!added)
             pickable.CanBePicked = true;// Reset to true if it failed
         
 
 
-        return true;
+        return added;
     }
 
     void Pickup::OnUpdate(float dt)
@@ -64,8 +65,9 @@ namespace Game::Systems
             {
                 auto& playerTransform = m_SceneRegistry.get<Core::Components::Transform>(playerEntity);
                 auto playerOriginPosition = playerTransform.GetWorldPos() + playerTransform.GetLocalOrigin();
+                auto itemOriginPosition = itemTransform.GetWorldPos() + itemTransform.GetLocalOrigin();
 
-                auto distToItem = glm::distance(itemTransform.GetWorldPos(), playerOriginPosition);
+                auto distToItem = glm::distance(itemOriginPosition, playerOriginPosition);
                 
                 if (distToItem <= bestDist)
                 {

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+#include <vector>
 #include "vendor/entt/entt.hpp"
 namespace Game::Components
 {
