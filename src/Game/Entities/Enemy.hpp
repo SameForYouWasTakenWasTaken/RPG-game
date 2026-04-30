@@ -39,6 +39,7 @@ namespace Game::Entities
         registry.emplace<EnemyTag>(entity);
 
         Transform.Scale({150.f, 150.f});
+        Transform.SetOrigin(Transform.GetLocalSize() / 2.f);
 
         return entity;
     }

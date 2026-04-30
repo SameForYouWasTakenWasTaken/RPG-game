@@ -23,6 +23,7 @@ namespace Game::Entities
 
         auto& transform = registry.emplace<Core::Components::Transform>(entity);
         transform.SetSize({50.f, 50.f});
+        transform.SetOrigin(transform.GetLocalSize() / 2.f);
 
         auto& sprite = registry.emplace<Game::Components::Sprite>(entity);
         sprite.TextureHandle = CoinTextureHandle;

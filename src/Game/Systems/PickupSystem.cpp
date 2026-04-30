@@ -63,7 +63,9 @@ namespace Game::Systems
             for (auto playerEntity : Players)
             {
                 auto& playerTransform = m_SceneRegistry.get<Core::Components::Transform>(playerEntity);
-                auto distToItem = glm::distance(itemTransform.GetWorldPos(), playerTransform.GetWorldPos());
+                auto playerOriginPosition = playerTransform.GetWorldPos() + playerTransform.GetLocalOrigin();
+
+                auto distToItem = glm::distance(itemTransform.GetWorldPos(), playerOriginPosition);
                 
                 if (distToItem <= bestDist)
                 {

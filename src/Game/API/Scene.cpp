@@ -37,14 +37,15 @@ namespace Game
 
     void Scene::OnUpdate(float dt)
     {
-        for (auto& layer : m_Layers)
-            layer->OnUpdate(dt);
-
         eventBus.Update();
         
         m_SystemsScheduler.RunAll([dt](Core::Systems::ISystem& system){
             system.OnUpdate(dt);
         });
+        
+        for (auto& layer : m_Layers)
+            layer->OnUpdate(dt);
+
     }
 
     void Scene::OnFixed(float step)
