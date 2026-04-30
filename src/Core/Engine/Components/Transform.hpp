@@ -38,7 +38,12 @@ namespace Core::Components
 
         const glm::mat3& ComputeMatrix(const Transform& t)
         {
-            glm::vec2 originLocal = t.GetLocalOrigin() / t.GetLocalSize();
+            const glm::vec2 size = t.GetLocalSize();
+            const glm::vec2 safeSize{
+                size.x == 0.f ? 1.f : size.x,
+                size.y == 0.f ? 1.f : size.y
+            };
+            glm::vec2 originLocal = t.GetLocalOrigin() / safeSize;
             
             glm::mat3 T = glm::translate(glm::mat3(1.f), t.GetLocalPosition());
             glm::mat3 R = glm::rotate(glm::mat3(1.f), t.GetLocalRotation().asRadians());
