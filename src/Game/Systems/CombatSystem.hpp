@@ -15,6 +15,12 @@ namespace Game::Systems
         void HandleWeapons(float dt);
         void HandleHumanoids(float dt);
     public:
+        /**
+         * @brief Constructs a Combat system bound to a scene registry and an event bus.
+         *
+         * Stores references to the provided `entt::registry` and `Core::Events::EventBus` for the
+         * system's lifetime so it can operate on scene entities and emit or consume events.
+         */
         Combat(entt::registry& registry, Core::Events::EventBus& eventBus) 
         :  m_SceneRegistry(registry), m_EventBus(eventBus) {}
 

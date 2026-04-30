@@ -8,7 +8,12 @@ namespace Game::Systems
     {
         entt::registry& m_SceneRegistry;
     public:
-        Pickup(entt::registry& registry) : m_SceneRegistry(registry) {}
+        /**
+ * @brief Constructs the Pickup system with a scene entity registry reference.
+ *
+ * @param registry Reference to the entt::registry used to query and modify scene entities.
+ */
+Pickup(entt::registry& registry) : m_SceneRegistry(registry) {}
 
         [[nodiscard]] bool PickUp(entt::entity item, entt::entity owner);
         bool IsPickable(entt::entity item);
