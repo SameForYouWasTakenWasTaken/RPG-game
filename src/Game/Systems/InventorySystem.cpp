@@ -1,4 +1,4 @@
-#include <iostream>
+#include <algorithm>
 #include "InventorySystem.hpp"
 
 #include "Components/InventoryItem.hpp"
@@ -34,8 +34,6 @@ namespace Game::Systems
             auto& existingItem = r.get<Game::Components::Item>(existing);
             existingItem.Count += incoming.Count;
             r.destroy(item); // Get rid of the duplicate
-
-            std::cout << "Count: " << existingItem.Count << std::endl;
         } else
         {
             if (inventory.Items.size() >= inventory.Capacity)
@@ -44,8 +42,6 @@ namespace Game::Systems
             inventory.Items.push_back(item);
         }
 
-        std::cout << "\nPut in a new item!\n" << "Name: "
-        << incoming.Name << "\n Inv Size: " << inventory.Items.size() << std::endl;
         return true;
     }
 
@@ -64,6 +60,7 @@ namespace Game::Systems
         assert(item != entt::null);
         assert(IsItem(r, item));
 
+        auto& inventory = r.get<Game::Components::Inventory>(owner);
         auto& incoming = r.get<Game::Components::Item>(item);
 
         auto existing = FindItemByType(r, owner, incoming.id);
@@ -72,8 +69,15 @@ namespace Game::Systems
         auto& existingItem = r.get<Game::Components::Item>(existing);
         existingItem.Count -= incoming.Count;
 
+        if (existingItem.Count <= 0)
+        {
+            inventory.Items.erase(
+                std::remove(inventory.Items.begin(), inventory.Items.end(), existing),
+                inventory.Items.end());
+            r.destroy(existing);
+        }
+
         r.destroy(item);
-        return;
     }
 
     /**
@@ -121,7 +125,7 @@ namespace Game::Systems
      * @param item Entity representing the item to add.
      * @return bool `true` if the item was added (or merged into an existing stack), `false` if adding a new item failed due to capacity limits.
      */
-    inline bool Inventory::AddItem(entt::entity owner, entt::entity item)
+    bool Inventory::AddItem(entt::entity owner, entt::entity item)
     {
         return AddItem(m_SceneRegistry, owner, item);
     }
@@ -132,7 +136,7 @@ namespace Game::Systems
      * @param inventoryOwner The owner entity whose inventory will be modified.
      * @param item The item entity to remove.
      */
-    inline void Inventory::RemoveItem(entt::entity inventoryOwner, entt::entity item)
+    void Inventory::RemoveItem(entt::entity inventoryOwner, entt::entity item)
     {
         RemoveItem(m_SceneRegistry, inventoryOwner, item);
     }
@@ -143,7 +147,7 @@ namespace Game::Systems
      * @param item The entity to check.
      * @return `true` if the entity has a `Game::Components::Item` component, `false` otherwise.
      */
-    inline bool Inventory::IsItem(entt::entity item)
+    bool Inventory::IsItem(entt::entity item)
     {
         return IsItem(m_SceneRegistry, item);
     }

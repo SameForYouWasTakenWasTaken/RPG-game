@@ -5,7 +5,7 @@ namespace Game::Components
     struct Humanoid
     {
         float MaxHealth = 100.f;
-        float Health = 100.f;
+        float Health = MaxHealth;
         float BaseDamage = 10.f;
         
         float Speed = 350.f;
