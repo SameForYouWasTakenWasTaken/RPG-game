@@ -4,6 +4,7 @@
 namespace Global::Types
 {
     using TextureID = uint32_t;
+    using zIndexType = uint8_t;
     struct TextureHandle
     {
         TextureID id = 0;

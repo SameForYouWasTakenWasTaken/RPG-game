@@ -21,6 +21,15 @@ namespace Game::Systems
                 Game::Components::Humanoid>(entt::exclude<Game::Components::Dead>);
     }
 
+    /**
+     * Finds the closest player entity to a given enemy world position.
+     *
+     * The selection uses the player's origin (player world position plus the transform's local origin)
+     * and compares Euclidean distances to determine the nearest player.
+     *
+     * @param nearestEnemyPos Enemy position in world coordinates used as the reference point.
+     * @return entt::entity The nearest player entity, or `entt::null` if no players are present.
+     */
     entt::entity AISystem::GetNearestPlayer(const glm::vec2& nearestEnemyPos)
     {
         entt::entity targetPlayer = entt::null;

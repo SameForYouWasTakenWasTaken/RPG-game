@@ -18,11 +18,14 @@ namespace Core::Rendering
         
         Window* m_Window;
         std::unordered_map<uint32_t, Batch> m_Batches;
+        std::vector<RenderObject> m_RenderObjectQueue;
 
         bool m_ValidWindow = false;
 
         void RenderVertexArray(const sf::VertexArray& va, const sf::RenderStates& states);
         void RenderVertexBuffer(const sf::VertexBuffer& vb, const sf::RenderStates& states);
+        void SortRenderObjects();
+        void AssignBatches();
     public:
         Renderer(Renderer&& renderer) = delete;
         Renderer(const Renderer& renderer) = delete;

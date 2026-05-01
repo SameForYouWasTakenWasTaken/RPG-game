@@ -10,6 +10,12 @@
 
 namespace Game::Systems
 {
+    /**
+     * @brief Determines whether an entity is eligible to be picked up.
+     *
+     * @param item The entity to evaluate.
+     * @return true if the entity is a registered inventory item and has both a `Game::Components::Pickable` component and a `Core::Components::Transform` component, false otherwise.
+     */
     bool Pickup::IsPickable(entt::registry& r, entt::entity item)
     {
         assert(item != entt::null);
@@ -20,7 +26,17 @@ namespace Game::Systems
                 Core::Components::Transform
             >(item);
     }
-
+  
+    /**
+     * @brief Attempts to pick up an item and add it to a picker's inventory.
+     *
+     * Marks the item's `Pickable::CanBePicked` as false to prevent concurrent pickup attempts,
+     * tries to add the item to the picker's inventory, and restores `CanBePicked` to true if adding fails.
+     *
+     * @param item The entity being picked up; must satisfy the precondition checked by `IsPickable`.
+     * @param picker The entity attempting the pickup (typically a player).
+     * @return `true` if the function completed its pickup attempt (current implementation always returns `true`).
+     */
     bool Pickup::PickUp(entt::registry& r, entt::entity item, entt::entity picker)
     {
         assert(IsPickable(r, item));
@@ -37,6 +53,15 @@ namespace Game::Systems
         return added;
     }
 
+    /**
+     * @brief Scans the scene each frame and attempts to transfer nearby pickable items into players' inventories.
+     *
+     * Iterates all entities that have Pickable+Item+Transform and, for each item currently allowed to be picked,
+     * finds the nearest player among entities with PlayerTag+Inventory+Transform. If the nearest player is within
+     * the item's pickup radius, attempts to pick up the item and add it to that player's inventory.
+     *
+     * @param dt Time elapsed since the last update, in seconds.
+     */
     void Pickup::OnUpdate(float dt)
     {
         auto Players = m_SceneRegistry.view<

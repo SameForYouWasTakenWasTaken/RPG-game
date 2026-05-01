@@ -6,6 +6,7 @@
 #include "Global/Types.hpp"
 #include "SFML/System/Vector2.hpp"
 #include <SFML/Graphics.hpp>
+#include <cstdint>
 
 namespace Core::Rendering
 {
@@ -15,11 +16,13 @@ namespace Core::Rendering
         Global::Types::TextureHandle TextureHandle{};
         const sf::Texture* Texture;
 
-        const Core::Components::Transform& Transform;
-        const Core::Components::Geometry& Geometry;
+        const Core::Components::Transform* Transform;
+        const Core::Components::Geometry* Geometry;
+
+        uint8_t zIndex = 0;
 
         RenderObject(
-            Global::Types::TextureHandle TextureHandle, const sf::Texture* Texture, Core::Components::Transform& Transform, const Core::Components::Geometry& geometry
+            Global::Types::TextureHandle TextureHandle, const sf::Texture* Texture, Core::Components::Transform* Transform, const Core::Components::Geometry* geometry
         ) : TextureHandle(TextureHandle), Texture(Texture), Transform(Transform), Geometry(geometry) {}
     };
 
@@ -30,6 +33,7 @@ namespace Core::Rendering
     
     struct Batch
     {
+        Global::Types::zIndexType zIndex = 0;
         Components::Geometry Geometry;
         const sf::Texture* Texture;
     };
