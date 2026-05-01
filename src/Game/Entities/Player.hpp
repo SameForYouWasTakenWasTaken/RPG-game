@@ -17,6 +17,16 @@ namespace Game::Entities
     {};
     static inline auto PlayerTextureHandle = Systems::ResourceManager::LoadTexture(RESOURCES_DIRECTORY "Textures/player.png");
     
+    /**
+     * @brief Creates and registers a player entity with default player components and initial configuration.
+     *
+     * The created entity is populated with transform, humanoid, geometry, weapon, inventory, sprite, and a PlayerTag.
+     * Geometry and sprite are initialized from the shared player texture handle; the transform is scaled and centered,
+     * and the humanoid movement speed is set to a default value.
+     *
+     * @param registry The ECS registry to which the player entity and its components will be added.
+     * @return entt::entity Handle to the newly created player entity.
+     */
     inline entt::entity CreatePlayerEntity(entt::registry& registry)
     {
 

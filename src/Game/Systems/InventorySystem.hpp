@@ -11,7 +11,12 @@ namespace Game::Systems
         
         static entt::entity FindItemByType(entt::registry& r, entt::entity owner, int itemID);
     public:
-        Inventory(entt::registry& registry) : m_SceneRegistry(registry) {}
+        /**
+ * @brief Constructs an Inventory system tied to the given entity registry.
+ *
+ * @param registry Reference to the scene's entt::registry used by this system.
+ */
+Inventory(entt::registry& registry) : m_SceneRegistry(registry) {}
         
         
         [[nodiscard]] static bool AddItem(entt::registry& r, entt::entity inventoryOwner, entt::entity item);

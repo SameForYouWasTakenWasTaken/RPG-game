@@ -62,6 +62,12 @@ namespace Game::Layers
         {
         }
 
+        /**
+         * @brief Submits all entities with sprite, transform, and geometry components to the renderer for drawing.
+         *
+         * For each matching entity, if the sprite's texture handle is valid this fetches the texture and submits a RenderObject
+         * composed of the sprite's texture handle, the resolved texture, the entity transform, and its geometry to the engine renderer.
+         */
         void MainLayer::OnRender() 
         {
             ZoneScoped;
@@ -120,6 +126,15 @@ namespace Game::Layers
             std::cout << "Entity died!" << std::endl;
         }
 
+        /**
+         * @brief Handles key-press events to spawn entities at the current mouse world position.
+         *
+         * When the F key is pressed, creates an enemy entity and positions it at the mouse cursor's
+         * world coordinates. When the G key is pressed, creates a coin entity and positions it at
+         * the mouse cursor's world coordinates.
+         *
+         * @param e Key press event containing the pressed key.
+         */
         void MainLayer::OnKey(Core::Events::KeyPressedEvent& e)
         {
             auto& registry = m_Scene->registry;
@@ -160,6 +175,14 @@ namespace Game::Layers
             CenterCameraToEntity(m_PlayerEntity);
         }
 
+        /**
+         * @brief Centers the active window's camera on the specified entity.
+         *
+         * Computes the target center from the entity's world position plus its local origin,
+         * applies that position to the active window's view, and resets the view.
+         *
+         * @param player Entity whose transform will be used as the camera center.
+         */
         void MainLayer::CenterCameraToEntity(entt::entity player)
         {
             auto& window = Core::Engine::Get().GetContext().ActiveWindow;

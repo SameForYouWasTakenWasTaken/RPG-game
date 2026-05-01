@@ -8,6 +8,17 @@
 #include "Components/States/Death.hpp"
 namespace Game::Systems
 {
+    /**
+     * @brief Processes all alive humanoid entities to handle death and optional health regeneration.
+     *
+     * Iterates over humanoids (entities with Game::Components::Humanoid and without Game::Components::Dead).
+     * If a humanoid's Health is less than or equal to zero, emits a Game::Events::Died event for that entity
+     * and adds Game::Components::Dead to the entity. If CanRegenerateHP is enabled, advances the humanoid's
+     * regeneration timer by dt; when timer_HealthRegen is at or above RegenerateSpeed, reduces the timer by
+     * RegenerateSpeed and increases Health by RegenerateHP, clamped to MaxHealth.
+     *
+     * @param dt Time step (seconds) used to advance regeneration timers.
+     */
     void Combat::HandleHumanoids(float dt)
     {
         auto AliveHumanoids = m_SceneRegistry.view<Game::Components::Humanoid>(entt::exclude<Game::Components::Dead>);
@@ -39,6 +50,15 @@ namespace Game::Systems
         }
     }
 
+    /**
+     * @brief Updates cooldown timers and hit-registration state for all weapons.
+     *
+     * Advances each weapon's `cooldownTimer` by `dt` when a hit has been registered,
+     * resets the timer to 0 once it reaches or exceeds `AttackCooldown`, and clears
+     * `hitRegistered` when the cooldown completes so the weapon can register a new hit.
+     *
+     * @param dt Time elapsed since the last update, in seconds.
+     */
     void Combat::HandleWeapons(float dt)
     {
         auto weapons = m_SceneRegistry.view<Components::Weapon>();
@@ -62,6 +82,14 @@ namespace Game::Systems
                 weapon.cooldownTimer += dt;
         }
     }
+    /**
+     * @brief Updates combat systems for the current frame.
+     *
+     * Advances weapon cooldowns and processes humanoid state (health regeneration and death)
+     * using the provided time step.
+     *
+     * @param dt Time elapsed since the last update, in seconds.
+     */
     void Combat::OnUpdate(float dt)
     {
         
@@ -69,7 +97,14 @@ namespace Game::Systems
         HandleHumanoids(dt);
     }
 
-    bool Combat::InHitWindow(const Components::Weapon& weapon)
+    /**
+     * @brief Checks whether a weapon is currently inside its hit window.
+     *
+     * @param weapon Weapon whose cooldown and hit window are evaluated.
+     * @return `true` if `weapon.cooldownTimer` is greater than or equal to `weapon.HitWindowBegin`
+     * and less than or equal to `weapon.HitWindowEnd`, `false` otherwise.
+     */
+    bool Combat::InHitWindow(const Weapons::Weapon& weapon)
     {
         return weapon.cooldownTimer >= weapon.HitWindowBegin && weapon.cooldownTimer <= weapon.HitWindowEnd;
     }

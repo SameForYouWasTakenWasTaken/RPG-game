@@ -17,6 +17,18 @@ namespace Game::Entities
     
     static inline auto EnemyTextureHandle = Systems::ResourceManager::LoadTexture(RESOURCES_DIRECTORY "Textures/enemy.jpg");
     
+    /**
+     * @brief Creates and configures a new enemy entity in the provided registry.
+     *
+     * The created entity receives Transform, Humanoid, Geometry, Enemy, Weapon,
+     * Sprite, and EnemyTag components. Humanoid attributes (Speed, RunSpeed,
+     * BaseDamage, Health) are initialized, geometry is created from the enemy
+     * texture, and the transform's scale and origin are set so the origin is at
+     * the geometry's center.
+     *
+     * @param registry The entt registry to which the enemy entity and its components are added.
+     * @return entt::entity Handle to the newly created enemy entity.
+     */
     inline entt::entity CreateEnemyEntity(entt::registry& registry)
     {
         auto entity = CreateEntity(registry);

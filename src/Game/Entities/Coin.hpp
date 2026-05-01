@@ -12,6 +12,16 @@
 namespace Game::Entities
 {
     static inline auto CoinTextureHandle = Game::Systems::ResourceManager::LoadTexture(RESOURCES_DIRECTORY "Textures/coin.png");
+    /**
+     * @brief Creates and configures an ECS entity representing a coin.
+     *
+     * The created entity is given geometry, transform (size 50x50 and centered origin),
+     * a sprite using the coin texture handle, item data (name "Coin", stack count 100),
+     * and a pickable component.
+     *
+     * @param registry ECS registry to create the coin entity in.
+     * @return entt::entity Handle to the newly created coin entity.
+     */
     inline entt::entity CreateCoin(entt::registry& registry)
     {
         auto& texture = Game::Systems::ResourceManager::GetTexture(CoinTextureHandle);
