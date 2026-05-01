@@ -68,20 +68,24 @@ namespace Game::Layers
             Core::Rendering::Renderer* renderer = Core::Engine::Get().GetRenderer();
 
             auto& registry = m_Scene->registry;
-            auto view = registry.view<Game::Components::Sprite, Core::Components::Transform, Core::Components::Geometry>();
+            auto view = registry.view<
+                Game::Components::Sprite, 
+                Core::Components::Transform, 
+                Core::Components::Geometry>();
 
-            view.each([&](
-                auto entity, 
-                const Game::Components::Sprite& sprite, 
-                Core::Components::Transform& transform,
-                Core::Components::Geometry& geometry
-            ){
+            for (auto entity : view)
+            {
+                auto& sprite = registry.get<Game::Components::Sprite>(entity);
+                auto& transform = registry.get<Core::Components::Transform>(entity);
+                auto& geometry = registry.get<Core::Components::Geometry>(entity);
+                
                 if (!sprite.TextureHandle.IsValid()) return;
                 const sf::Texture& texture = Systems::ResourceManager::GetTexture(sprite.TextureHandle);
                 
-                Core::Rendering::RenderObject obj{sprite.TextureHandle, &texture, transform, geometry};
+                Core::Rendering::RenderObject obj{sprite.TextureHandle, &texture, &transform, &geometry};
+                obj.zIndex = sprite.zIndex;
                 renderer->Submit(obj);
-            });
+            }
         }
 
         void MainLayer::OnAttach() 

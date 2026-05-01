@@ -32,13 +32,16 @@ namespace Game::Entities
         auto& inventory = registry.emplace<Game::Components::Inventory>(entity);
         
         Geometry = Core::Components::CreateDefaultGeometry(texture, sf::Color::White);
-        registry.emplace<Game::Components::Sprite>(entity, PlayerTextureHandle); 
+        auto& sprite = registry.emplace<Game::Components::Sprite>(entity, PlayerTextureHandle); 
+        sprite.zIndex = 1;
         registry.emplace<PlayerTag>(entity);
 
         Transform.Scale({150.f, 150.f});
         Transform.SetOrigin(Transform.GetLocalSize() / 2.f);
 
         Humanoid.Speed = 500.f;
+
+        
 
         return entity;
     }
