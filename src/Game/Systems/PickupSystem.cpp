@@ -16,17 +16,17 @@ namespace Game::Systems
      * @param item The entity to evaluate.
      * @return true if the entity is a registered inventory item and has both a `Game::Components::Pickable` component and a `Core::Components::Transform` component, false otherwise.
      */
-    bool Pickup::IsPickable(entt::entity item)
+    bool Pickup::IsPickable(entt::registry& r, entt::entity item)
     {
         assert(item != entt::null);
 
-        return Game::Systems::Inventory::IsItem(m_SceneRegistry, item) &&
-            m_SceneRegistry.all_of<
+        return Game::Systems::Inventory::IsItem(r, item) &&
+            r.all_of<
                 Game::Components::Pickable,
                 Core::Components::Transform
             >(item);
     }
-
+  
     /**
      * @brief Attempts to pick up an item and add it to a picker's inventory.
      *
@@ -37,14 +37,14 @@ namespace Game::Systems
      * @param picker The entity attempting the pickup (typically a player).
      * @return `true` if the function completed its pickup attempt (current implementation always returns `true`).
      */
-    bool Pickup::PickUp(entt::entity item, entt::entity picker)
+    bool Pickup::PickUp(entt::registry& r, entt::entity item, entt::entity picker)
     {
-        assert(IsPickable(item));
+        assert(IsPickable(r, item));
         
-        auto& pickable = m_SceneRegistry.get<Components::Pickable>(item);
+        auto& pickable = r.get<Components::Pickable>(item);
         pickable.CanBePicked = false;
 
-        const bool added = Inventory::AddItem(m_SceneRegistry, picker, item);
+        const bool added = Inventory::AddItem(r, picker, item);
         if (!added)
             pickable.CanBePicked = true;// Reset to true if it failed
         
@@ -107,5 +107,15 @@ namespace Game::Systems
             if (!PickUp(itemEntity, nearestPlayer))
                 std::cout << "Couldn't pick up item!" << std::endl;
         }
+    }
+
+    bool Pickup::PickUp(entt::entity item, entt::entity owner)
+    {
+        return PickUp(m_SceneRegistry, item, owner);
+    }
+
+    bool Pickup::IsPickable(entt::entity item)
+    {
+        return IsPickable(m_SceneRegistry, item);
     }
 }
