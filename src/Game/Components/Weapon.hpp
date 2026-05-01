@@ -2,7 +2,7 @@
 
 #include "vendor/entt/entt.hpp"
 
-namespace Game::Weapons
+namespace Game::Components
 {
     struct Weapon
     {

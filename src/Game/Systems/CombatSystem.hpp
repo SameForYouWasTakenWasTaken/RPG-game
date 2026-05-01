@@ -2,7 +2,7 @@
 
 #include "Engine/Events/EventBus.hpp"
 #include "Engine/Systems/ISystem.hpp"
-#include "Entities/Weapon.hpp"
+#include "Components/Weapon.hpp"
 #include "vendor/entt/entt.hpp"
 
 namespace Game::Systems
@@ -25,7 +25,7 @@ namespace Game::Systems
         :  m_SceneRegistry(registry), m_EventBus(eventBus) {}
 
         static void AttackEntity(entt::registry& r, Core::Events::EventBus& eventBus, entt::entity attacker, entt::entity attackee);
-        static bool InHitWindow(const Weapons::Weapon& weapon);
+        static bool InHitWindow(const Components::Weapon& weapon);
         static bool InAttackRange(entt::registry& r, entt::entity enemy, entt::entity other);
         
         // Inline because they use wrap the static methods

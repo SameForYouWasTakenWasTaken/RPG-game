@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Components/Geometry.hpp"
-#include "Entities/Weapon.hpp"
+#include "Components/Weapon.hpp"
 #include "vendor/entt/entt.hpp"
 #include "Engine/Components/Transform.hpp"
 #include "Systems/ResourceManager.hpp"
@@ -38,7 +38,7 @@ namespace Game::Entities
         auto& Geometry = registry.emplace<Core::Components::Geometry>(entity);
         auto& Enemy = registry.emplace<Game::Components::Enemy>(entity);
 
-        auto& weapon = registry.emplace<Game::Weapons::Weapon>(entity);
+        auto& weapon = registry.emplace<Game::Components::Weapon>(entity);
         
         Humanoid.Speed = 300.f;
         Humanoid.RunSpeed = Humanoid.Speed * 1.2;

@@ -2,7 +2,7 @@
 #include "CombatSystem.hpp"
 #include "Components/Humanoid.hpp"
 #include "Engine/Components/Transform.hpp"
-#include "Entities/Weapon.hpp"
+#include "Components/Weapon.hpp"
 #include "Events/AttackedEvent.hpp"
 #include "Events/Died.hpp"
 #include "Components/States/Death.hpp"
@@ -61,12 +61,12 @@ namespace Game::Systems
      */
     void Combat::HandleWeapons(float dt)
     {
-        auto weapons = m_SceneRegistry.view<Weapons::Weapon>();
+        auto weapons = m_SceneRegistry.view<Components::Weapon>();
 
         // Handle weapon timers
         for (auto entity : weapons)
         {
-            auto& weapon = m_SceneRegistry.get<Weapons::Weapon>(entity);
+            auto& weapon = m_SceneRegistry.get<Components::Weapon>(entity);
 
             // Only update the timer if there was any contact to begin with
             if (weapon.cooldownTimer >= weapon.AttackCooldown)
@@ -104,14 +104,14 @@ namespace Game::Systems
      * @return `true` if `weapon.cooldownTimer` is greater than or equal to `weapon.HitWindowBegin`
      * and less than or equal to `weapon.HitWindowEnd`, `false` otherwise.
      */
-    bool Combat::InHitWindow(const Weapons::Weapon& weapon)
+    bool Combat::InHitWindow(const Components::Weapon& weapon)
     {
         return weapon.cooldownTimer >= weapon.HitWindowBegin && weapon.cooldownTimer <= weapon.HitWindowEnd;
     }
 
     bool Combat::InAttackRange(entt::registry& r, entt::entity enemy, entt::entity other)
     {
-        auto& weapon = r.get<Game::Weapons::Weapon>(enemy);
+        auto& weapon = r.get<Components::Weapon>(enemy);
         auto& EnemyTransform = r.get<Core::Components::Transform>(enemy);
         auto& OtherTransform = r.get<Core::Components::Transform>(other);
 
@@ -135,7 +135,7 @@ namespace Game::Systems
 
     void Combat::AttackEntity(entt::registry& r, Core::Events::EventBus& eventBus, entt::entity attacker, entt::entity attackee)
     {
-        auto& weapon = r.get<Weapons::Weapon>(attacker);
+        auto& weapon = r.get<Components::Weapon>(attacker);
         auto& attackerHumanoid = r.get<Components::Humanoid>(attacker);
 
         // Make sure the hit windows are not poorly configured or longer than the actual cooldown
