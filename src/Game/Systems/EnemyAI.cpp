@@ -79,12 +79,12 @@ namespace Game::Systems
     }
 
 
-    bool AISystem::CanEnemyHear(entt::entity enemy, entt::entity other)
+    bool AISystem::CanEnemyHear(entt::registry& r, entt::entity enemy, entt::entity other)
     {
-        auto& EnemyTransform = m_SceneRegistry.get<Core::Components::Transform>(enemy);
-        auto& OtherTransform = m_SceneRegistry.get<Core::Components::Transform>(other);
+        auto& EnemyTransform = r.get<Core::Components::Transform>(enemy);
+        auto& OtherTransform = r.get<Core::Components::Transform>(other);
 
-        auto& EnemyComponent = m_SceneRegistry.get<Game::Components::Enemy>(enemy);
+        auto& EnemyComponent = r.get<Game::Components::Enemy>(enemy);
 
         auto distance = glm::distance(OtherTransform.GetWorldPos(), EnemyTransform.GetWorldPos());
 
@@ -94,11 +94,11 @@ namespace Game::Systems
         return false;
     }
 
-    bool AISystem::CanEnemySee(entt::entity enemy, entt::entity other)
+    bool AISystem::CanEnemySee(entt::registry& r, entt::entity enemy, entt::entity other)
     {
-        auto& EnemyTransform = m_SceneRegistry.get<Core::Components::Transform>(enemy);
-        auto& OtherTransform = m_SceneRegistry.get<Core::Components::Transform>(other);
-        auto& EnemyComponent = m_SceneRegistry.get<Game::Components::Enemy>(enemy);
+        auto& EnemyTransform = r.get<Core::Components::Transform>(enemy);
+        auto& OtherTransform = r.get<Core::Components::Transform>(other);
+        auto& EnemyComponent = r.get<Game::Components::Enemy>(enemy);
         
         auto distance = glm::distance(OtherTransform.GetWorldPos(), EnemyTransform.GetWorldPos());
 
@@ -110,11 +110,11 @@ namespace Game::Systems
         return false;
     }
 
-    bool AISystem::CanEnemyDetect(entt::entity enemy, entt::entity other)
+    bool AISystem::CanEnemyDetect(entt::registry& r, entt::entity enemy, entt::entity other)
     {
-        auto& EnemyTransform = m_SceneRegistry.get<Core::Components::Transform>(enemy);
-        auto& OtherTransform = m_SceneRegistry.get<Core::Components::Transform>(other);
-        auto& EnemyComponent = m_SceneRegistry.get<Game::Components::Enemy>(enemy);
+        auto& EnemyTransform = r.get<Core::Components::Transform>(enemy);
+        auto& OtherTransform = r.get<Core::Components::Transform>(other);
+        auto& EnemyComponent = r.get<Game::Components::Enemy>(enemy);
 
         auto distance = glm::distance(OtherTransform.GetWorldPos(), EnemyTransform.GetWorldPos());
         
@@ -132,5 +132,20 @@ namespace Game::Systems
 
         Movement::LinearGoTo(enemyTransform, playerTransform.GetWorldPos(), enemyHumanoid.RunSpeed * dt);
         m_SceneRegistry.emplace_or_replace<Game::Components::Chasing>(enemy);
+    }
+
+    bool AISystem::CanEnemyDetect(entt::entity enemy, entt::entity other)
+    {
+        return CanEnemyDetect(m_SceneRegistry, enemy, other);
+    }
+    
+    bool AISystem::CanEnemyHear(entt::entity enemy, entt::entity other)
+    {
+        return CanEnemyHear(m_SceneRegistry, enemy, other);
+    }
+
+    bool AISystem::CanEnemySee(entt::entity enemy, entt::entity other)
+    {
+        return CanEnemySee(m_SceneRegistry, enemy, other);
     }
 }
