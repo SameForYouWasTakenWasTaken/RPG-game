@@ -104,7 +104,7 @@ namespace Game::Systems
      * @return `true` if `weapon.cooldownTimer` is greater than or equal to `weapon.HitWindowBegin`
      * and less than or equal to `weapon.HitWindowEnd`, `false` otherwise.
      */
-    bool Combat::InHitWindow(const Weapons::Weapon& weapon)
+    bool Combat::InHitWindow(const Components::Weapon& weapon)
     {
         return weapon.cooldownTimer >= weapon.HitWindowBegin && weapon.cooldownTimer <= weapon.HitWindowEnd;
     }
