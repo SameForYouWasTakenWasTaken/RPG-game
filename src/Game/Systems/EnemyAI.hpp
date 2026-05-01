@@ -5,7 +5,6 @@
 #include "Engine/Events/EventBus.hpp"
 #include "Engine/Systems/ISystem.hpp"
 #include "vendor/entt/entt.hpp"
-#include "Entities/Weapon.hpp"
 
 namespace Game::Systems
 {

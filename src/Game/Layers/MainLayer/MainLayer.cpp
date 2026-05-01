@@ -11,7 +11,7 @@
 #include "Engine/Events/MouseEvent.hpp"
 #include "Engine/Events/WindowResizeEvent.hpp"
 #include "Engine/Renderer/Types.hpp"
-#include "Entities/Weapon.hpp"
+#include "Components/Weapon.hpp"
 #include "Entities/Coin.hpp"
 #include "Events/AttackedEvent.hpp"
 #include "Events/Died.hpp"
