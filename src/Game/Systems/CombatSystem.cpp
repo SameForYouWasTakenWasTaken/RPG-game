@@ -1,6 +1,7 @@
 #include <iostream>
 #include "CombatSystem.hpp"
 #include "Components/Humanoid.hpp"
+#include "Components/Progression.hpp"
 #include "Engine/Components/Transform.hpp"
 #include "Components/Weapon.hpp"
 #include "Events/AttackedEvent.hpp"
@@ -92,7 +93,6 @@ namespace Game::Systems
      */
     void Combat::OnUpdate(float dt)
     {
-        
         HandleWeapons(dt);
         HandleHumanoids(dt);
     }
@@ -137,6 +137,8 @@ namespace Game::Systems
     {
         auto& weapon = r.get<Components::Weapon>(attacker);
         auto& attackerHumanoid = r.get<Components::Humanoid>(attacker);
+        auto& attackerCombatStats = r.get<Components::CombatStats>(attacker);
+        auto& attackeeCombatStats = r.get<Components::CombatStats>(attackee);
 
         // Make sure the hit windows are not poorly configured or longer than the actual cooldown
         assert(weapon.HitWindowBegin < weapon.HitWindowEnd);
@@ -151,8 +153,12 @@ namespace Game::Systems
         // trigger hit ONCE inside window
         if (!weapon.hitRegistered && InHitWindow(weapon) || firstContact)
         {
-            float dmg = attackerHumanoid.BaseDamage + weapon.Damage;
-            eventBus.Queue<Events::Attacked>(attacker, attackee, dmg);
+            float baseDamage = attackerCombatStats.Strength + weapon.Damage;
+            float defense = attackeeCombatStats.Dexterity;
+            float finalDamage = baseDamage * (baseDamage / (baseDamage + defense));
+             
+            eventBus.Queue<Events::Attacked>(attacker, attackee, finalDamage);
+
             weapon.hitRegistered = true;
         }
 

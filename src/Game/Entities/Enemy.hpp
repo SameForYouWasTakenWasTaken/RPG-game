@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Components/Progression.hpp"
 #include "Engine/Components/Geometry.hpp"
 #include "Components/Weapon.hpp"
 #include "vendor/entt/entt.hpp"
@@ -38,11 +39,13 @@ namespace Game::Entities
         auto& Geometry = registry.emplace<Core::Components::Geometry>(entity);
         auto& Enemy = registry.emplace<Game::Components::Enemy>(entity);
 
+        auto& combatStats = registry.emplace<Game::Components::CombatStats>(entity);
         auto& weapon = registry.emplace<Game::Components::Weapon>(entity);
+
         
         Humanoid.Speed = 300.f;
         Humanoid.RunSpeed = Humanoid.Speed * 1.2;
-        Humanoid.BaseDamage = 5.f;
+        combatStats.Strength = 5.f;
         Humanoid.Health = 30.f;
         
         Geometry = Core::Components::CreateDefaultGeometry(texture, sf::Color::White);

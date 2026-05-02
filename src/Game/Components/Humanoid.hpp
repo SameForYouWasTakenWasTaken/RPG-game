@@ -6,7 +6,6 @@ namespace Game::Components
     {
         float MaxHealth = 100.f;
         float Health = MaxHealth;
-        float BaseDamage = 10.f;
         
         float Speed = 350.f;
         float RunSpeed = Speed * 1.2f;

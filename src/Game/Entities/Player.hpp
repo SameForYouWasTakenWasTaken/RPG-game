@@ -2,6 +2,7 @@
 
 #include "Components/HierarchyComponent.hpp"
 #include "Components/Inventory.hpp"
+#include "Components/Progression.hpp"
 #include "Engine/Components/Geometry.hpp"
 #include "Engine/Components/Transform.hpp"
 #include "Systems/ResourceManager.hpp"
@@ -40,6 +41,8 @@ namespace Game::Entities
         
         auto& weapon = registry.emplace<Game::Components::Weapon>(entity);
         auto& inventory = registry.emplace<Game::Components::Inventory>(entity);
+        auto& progression = registry.emplace<Game::Components::Progression>(entity);
+        auto& combatStats = registry.emplace<Game::Components::CombatStats>(entity);
         
         Geometry = Core::Components::CreateDefaultGeometry(texture, sf::Color::White);
         auto& sprite = registry.emplace<Game::Components::Sprite>(entity, PlayerTextureHandle); 
