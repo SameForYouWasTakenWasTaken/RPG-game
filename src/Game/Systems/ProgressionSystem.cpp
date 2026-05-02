@@ -57,7 +57,7 @@ namespace Game::Systems
             {
                 progression.XP -= xpNeeded;
                 progression.Level++;
-
+                
                 m_EventBus.Queue<Events::LevelUp>(entity, progression.Level);
             }
         }

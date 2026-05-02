@@ -2,17 +2,18 @@
 
 namespace Game::Components
 {
-    struct Stats
+    struct CombatStats
     {
-        float Strength = 0.f;
+        float Strength = 1.f;
         float Dexterity = 0.f;
-        float Vitality = 0.f;
     };
 
     struct Progression
     {
         int Level = 1;
         int XP = 0;
+
+        int Gold = 0;
 
         bool CanEarnXP = true;
     };
