@@ -53,12 +53,12 @@ namespace Game::Systems
             if (!progression.CanEarnXP) continue;
             int xpNeeded = XPToNextLevel(progression.Level);
 
-            if (progression.XP >= xpNeeded)
+            while (progression.XP >= xpNeeded)
             {
                 progression.XP -= xpNeeded;
                 progression.Level++;
-                
                 m_EventBus.Queue<Events::LevelUp>(entity, progression.Level);
+                xpNeeded = XPToNextLevel(progression.Level);
             }
         }
     }

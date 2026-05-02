@@ -21,7 +21,8 @@ namespace Game::Entities
     /**
      * @brief Creates and registers a player entity with default player components and initial configuration.
      *
-     * The created entity is populated with transform, humanoid, geometry, weapon, inventory, sprite, and a PlayerTag.
+     * The created entity is populated with transform, humanoid, geometry, weapon, inventory,
+     * progression, combat stats, sprite, and a PlayerTag.
      * Geometry and sprite are initialized from the shared player texture handle; the transform is scaled and centered,
      * and the humanoid movement speed is set to a default value.
      *

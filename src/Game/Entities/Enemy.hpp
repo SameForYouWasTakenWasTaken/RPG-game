@@ -22,8 +22,8 @@ namespace Game::Entities
      * @brief Creates and configures a new enemy entity in the provided registry.
      *
      * The created entity receives Transform, Humanoid, Geometry, Enemy, Weapon,
-     * Sprite, and EnemyTag components. Humanoid attributes (Speed, RunSpeed,
-     * BaseDamage, Health) are initialized, geometry is created from the enemy
+     * Sprite, CombatStats, Weapon, and EnemyTag components. Humanoid attributes (Speed, RunSpeed,
+     * Health) and combat stats (Strength) are initialized; geometry is created from the enemy
      * texture, and the transform's scale and origin are set so the origin is at
      * the geometry's center.
      *

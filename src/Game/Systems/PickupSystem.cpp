@@ -39,7 +39,13 @@ namespace Game::Systems
      */
     bool Pickup::PickUp(entt::registry& r, entt::entity item, entt::entity picker)
     {
-        assert(IsPickable(r, item));
+        if (item == entt::null || picker == entt::null)
+            return false;
+        
+        if (!r.all_of<Game::Components::Pickable, Core::Components::Transform>(item) ||
+            !Game::Systems::Inventory::IsItem(r, item) ||
+            !r.all_of<Game::Components::Inventory>(picker))
+            return false;
         
         auto& pickable = r.get<Components::Pickable>(item);
         pickable.CanBePicked = false;
