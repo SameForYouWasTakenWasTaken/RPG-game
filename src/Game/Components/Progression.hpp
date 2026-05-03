@@ -5,7 +5,8 @@ namespace Game::Components
     struct CombatStats
     {
         float Strength = 1.f;
-        float Dexterity = 0.f;
+        float Dexterity = 1.f;
+        float Vitality = 1.f;
     };
 
     struct Progression
