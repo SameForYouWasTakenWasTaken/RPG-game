@@ -35,7 +35,7 @@ namespace Game::Systems
      *
      * @param item The entity being picked up; must satisfy the precondition checked by `IsPickable`.
      * @param picker The entity attempting the pickup (typically a player).
-     * @return `true` if the function completed its pickup attempt (current implementation always returns `true`).
+     * @return true if the item was successfully added to the picker's inventory, `false` if the inventory is full.
      */
     bool Pickup::PickUp(entt::registry& r, entt::entity item, entt::entity picker)
     {

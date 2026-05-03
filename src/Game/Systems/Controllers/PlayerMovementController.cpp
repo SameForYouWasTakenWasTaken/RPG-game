@@ -10,29 +10,21 @@ namespace Game::Systems
     {
         if (!AllowMovement) return;
         if (m_MainPlayer == entt::null) return;
+        
+            glm::vec2 input{0.f, 0.f};
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) input.y -= 1.f;
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) input.x -= 1.f;
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) input.y += 1.f;
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) input.x += 1.f;
 
-        bool walking = false;
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) ||
-                sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) ||
-                sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) ||
-                sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) ) 
-                    walking = true;
-            
-            auto& transform = m_SceneRegistry.get<Core::Components::Transform>(m_MainPlayer);
-            auto& humanoid = m_SceneRegistry.get<Components::Humanoid>(m_MainPlayer);
-            float speed = humanoid.Speed * dt;
-
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
-                transform.Move(glm::vec2{0.f, -speed});
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-                transform.Move(glm::vec2{-speed, 0.f});
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-                transform.Move(glm::vec2{0.f, speed});
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-                transform.Move(glm::vec2{speed, 0.f});
-            
-            if (walking)
+            if (input != glm::vec2{0.f, 0.f})
+            {
+                auto& transform = m_SceneRegistry.get<Core::Components::Transform>(m_MainPlayer);
+                auto& humanoid = m_SceneRegistry.get<Components::Humanoid>(m_MainPlayer);
+                input = glm::normalize(input);
+                transform.Move(input * humanoid.Speed * dt);
                 CenterCameraToPlayer();
+            }
     }
 
     /**

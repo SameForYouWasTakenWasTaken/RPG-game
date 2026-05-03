@@ -11,13 +11,19 @@ namespace Game::Systems
         entt::entity m_MainPlayer{entt::null};
 
         void OnWindowResize(Core::Events::WindowResizeEvent& e);
+        entt::connection m_WindowResizeConnection;
     public:
         bool AllowMovement = true;
 
         PlayerMovementController(entt::registry& registry, Core::Events::EventBus& bus)
             : IController(registry, bus) 
         {
-            m_EventBus.Sink<Core::Events::WindowResizeEvent>().connect<&PlayerMovementController::OnWindowResize>(this);
+            m_WindowResizeConnection = m_EventBus.Sink<Core::Events::WindowResizeEvent>().connect<&PlayerMovementController::OnWindowResize>(this);
+        }
+
+        ~PlayerMovementController()
+        {
+            m_WindowResizeConnection.release();
         }
 
         void OnUpdate(float dt) override;

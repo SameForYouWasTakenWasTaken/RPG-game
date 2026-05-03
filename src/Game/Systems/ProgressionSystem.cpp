@@ -19,7 +19,7 @@ namespace Game::Systems
     int Progression::CalculateBaseXP(int entityLevel)
     {
         constexpr float c = 20.0f;
-        return c * std::pow(entityLevel, 1.5f);
+        return static_cast<int>(c * std::pow(entityLevel, 1.5f));
     }
 
     int Progression::CalculateXPGain(int level, int otherLevel, int baseXP)
@@ -41,6 +41,15 @@ namespace Game::Systems
     void Progression::AddXP(Components::Progression& prog, int xpGain)
     {
         prog.XP += xpGain;
+    }
+
+    void Progression::OnLevelUp(Events::LevelUp& e)
+    {
+        auto* humanoid = m_SceneRegistry.try_get<Components::Humanoid>(e.entity);
+        auto* stats = m_SceneRegistry.try_get<Components::CombatStats>(e.entity);
+        if (!humanoid || !stats) return;
+
+        RecalculateMaxHealth(*stats, *humanoid);
     }
     
     void Progression::RecalculateMaxHealth(Components::CombatStats &stats, Components::Humanoid &humanoid)
