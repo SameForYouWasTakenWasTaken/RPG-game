@@ -1,4 +1,5 @@
 #include "ProgressionSystem.hpp"
+#include "Components/Humanoid.hpp"
 #include "Components/Progression.hpp"
 #include "Events/LevelUp.hpp"
 #include <iostream>
@@ -40,6 +41,16 @@ namespace Game::Systems
     void Progression::AddXP(Components::Progression& prog, int xpGain)
     {
         prog.XP += xpGain;
+    }
+    
+    void Progression::RecalculateMaxHealth(Components::CombatStats &stats, Components::Humanoid &humanoid)
+    {
+        float newMax = 100.0f + stats.Vitality * 10.0f;
+
+        float ratio = humanoid.Health / humanoid.MaxHealth;
+
+        humanoid.MaxHealth = newMax;
+        humanoid.Health = ratio * newMax; // preserve % HP
     }
 
     void Progression::OnUpdate(float dt)
