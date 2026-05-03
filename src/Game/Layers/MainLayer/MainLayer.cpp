@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include <memory>
 #include <tracy/Tracy.hpp>
 #include "MainLayer.hpp"
 #include "Components/Humanoid.hpp"
@@ -32,30 +33,10 @@ namespace Game::Layers
 {
         void MainLayer::OnUpdate(float dt) 
         {
-            bool walking = false;
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) ||
-                sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) ||
-                sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) ||
-                sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) ) 
-                    walking = true;
+            m_Controllers.RunAll([dt](Systems::IController& controller){
+                controller.OnUpdate(dt);
+            });
 
-                        auto& registry = m_Scene->registry;
-            
-            auto& transform = registry.get<Core::Components::Transform>(m_PlayerEntity);
-            auto& humanoid = registry.get<Components::Humanoid>(m_PlayerEntity);
-            float speed = humanoid.Speed * dt;
-                    
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
-                transform.Move(glm::vec2{0.f, -speed});
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-                transform.Move(glm::vec2{-speed, 0.f});
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-                transform.Move(glm::vec2{0.f, speed});
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-                transform.Move(glm::vec2{speed, 0.f});
-            
-            if (walking)
-                CenterCameraToEntity(m_PlayerEntity);
         }
 
         void MainLayer::OnFixed(float step)
@@ -101,7 +82,11 @@ namespace Game::Layers
             auto player = Game::Entities::CreatePlayerEntity(registry);
             m_PlayerEntity = player;
 
-            CenterCameraToEntity(m_PlayerEntity);
+            m_PlayerMovementController = std::make_unique<Game::Systems::PlayerMovementController>(registry, m_Scene->eventBus);
+            m_PlayerMovementController->SetMainPlayer(m_PlayerEntity);
+            m_PlayerMovementController->CenterCameraToPlayer();
+
+            m_Controllers.Add(*m_PlayerMovementController);
             ConnectToEvents();
         }
 
@@ -116,7 +101,6 @@ namespace Game::Layers
 
             m_Scene->eventBus.Sink<Core::Events::KeyPressedEvent>().connect<&MainLayer::OnKey>(this);
             m_Scene->eventBus.Sink<Core::Events::MouseClickEvent>().connect<&MainLayer::OnMouse>(this);
-            m_Scene->eventBus.Sink<Core::Events::WindowResizeEvent>().connect<&MainLayer::OnWindowResize>(this);
             m_Scene->eventBus.Sink<Game::Events::Attacked>().connect<&MainLayer::OnAttack>(this);
             m_Scene->eventBus.Sink<Game::Events::Died>().connect<&MainLayer::OnDeath>(this);
         }
@@ -171,32 +155,6 @@ namespace Game::Layers
                 
                 Transform.SetPosition({world.x, world.y});
             }
-        }
-
-        void MainLayer::OnWindowResize(Core::Events::WindowResizeEvent& e)
-        {
-            auto& window = Core::Engine::Get().GetContext().ActiveWindow;
-            CenterCameraToEntity(m_PlayerEntity);
-        }
-
-        /**
-         * @brief Centers the active window's camera on the specified entity.
-         *
-         * Computes the target center from the entity's world position plus its local origin,
-         * applies that position to the active window's view, and resets the view.
-         *
-         * @param player Entity whose transform will be used as the camera center.
-         */
-        void MainLayer::CenterCameraToEntity(entt::entity player)
-        {
-            auto& window = Core::Engine::Get().GetContext().ActiveWindow;
-            auto& transform = m_Scene->registry.get<Core::Components::Transform>(player);
-
-            glm::vec2 pos = transform.GetWorldPos();
-            pos += transform.GetLocalOrigin();
-
-            window->View.setCenter(sf::Vector2f{pos.x, pos.y});
-            window->ResetView();
         }
 
         void MainLayer::OnAttack(Game::Events::Attacked& e)
