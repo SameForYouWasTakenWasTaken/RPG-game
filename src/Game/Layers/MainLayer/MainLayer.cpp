@@ -21,6 +21,8 @@
 #include "SFML/System/Vector2.hpp"
 #include "SFML/Window/Keyboard.hpp"
 #include "SFML/Window/Mouse.hpp"
+#include "Systems/InventorySystem.hpp"
+#include "Systems/PickupSystem.hpp"
 #include "Systems/ResourceManager.hpp"
 
 #include "Engine/Components/Transform.hpp"
@@ -66,7 +68,12 @@ namespace Game::Layers
                 auto& transform = registry.get<Core::Components::Transform>(entity);
                 auto& geometry = registry.get<Core::Components::Geometry>(entity);
                 
-                if (!sprite.TextureHandle.IsValid()) return;
+                if (!sprite.TextureHandle.IsValid()) continue;
+               
+                if (m_Scene->Inventory.IsItem(entity))
+                    if (!m_Scene->Inventory.IsOwnedBy(entt::null, entity)) // Don't draw owned items
+                        continue;
+                
                 const sf::Texture& texture = Systems::ResourceManager::GetTexture(sprite.TextureHandle);
                 
                 Core::Rendering::RenderObject obj{sprite.TextureHandle, &texture, &transform, &geometry};

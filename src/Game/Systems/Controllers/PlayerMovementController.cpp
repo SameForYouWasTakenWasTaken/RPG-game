@@ -39,7 +39,8 @@ namespace Game::Systems
 
         auto& window = Core::Engine::Get().GetContext().ActiveWindow;
         auto& transform = m_SceneRegistry.get<Core::Components::Transform>(m_MainPlayer);
-       
+        
+        
         glm::vec2 pos = transform.GetWorldPos();
         pos += transform.GetLocalOrigin();
         

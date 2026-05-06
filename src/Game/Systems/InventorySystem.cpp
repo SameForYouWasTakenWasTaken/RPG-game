@@ -4,6 +4,7 @@
 #include "Components/InventoryItem.hpp"
 #include "Components/Inventory.hpp"
 #include "Components/Sprite.hpp"
+#include "Systems/PickupSystem.hpp"
 
 namespace Game::Systems
 {
@@ -26,7 +27,10 @@ namespace Game::Systems
         assert(IsItem(r, item));
 
         auto& inventory = r.get<Game::Components::Inventory>(owner);
+        
         auto& incoming = r.get<Game::Components::Item>(item);
+        incoming.owner = owner;
+
         auto existing = FindItemByType(r, owner, incoming.id);
 
         if (existing != entt::null)
@@ -150,5 +154,22 @@ namespace Game::Systems
     bool Inventory::IsItem(entt::entity item)
     {
         return IsItem(m_SceneRegistry, item);
+    }
+
+    bool Inventory::IsOwnedBy(entt::registry& r, entt::entity owner, entt::entity item)
+    {
+        if (item == entt::null) return false;
+
+        if (!IsItem(r, item)) return false;
+        auto& itemComponent = r.get<Components::Item>(item);
+
+        return itemComponent.owner == owner;
+    }
+
+
+
+    bool Inventory::IsOwnedBy(entt::entity owner, entt::entity item)
+    {
+        return IsOwnedBy(m_SceneRegistry, owner, item);
     }
 }
