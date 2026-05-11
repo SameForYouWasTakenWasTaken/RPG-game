@@ -38,7 +38,7 @@ namespace Game::Layers
             m_Controllers.RunAll([dt](Systems::IController& controller){
                 controller.OnUpdate(dt);
             });
-
+            
         }
 
         void MainLayer::OnFixed(float step)
@@ -152,7 +152,7 @@ namespace Game::Layers
             {
                 auto& window = Core::Engine::Get().GetContext().ActiveWindow;
                 auto& rw = window->GetRenderWindow();
-
+                
                 sf::Vector2i pixelPos = sf::Mouse::getPosition(rw);
                 auto world = rw.mapPixelToCoords(pixelPos, window->View);
                 
