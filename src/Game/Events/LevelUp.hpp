@@ -10,9 +10,9 @@ namespace Game::Events
 
     public:
         entt::entity entity{entt::null};
-        int newLevel;
+        uint32_t newLevel;
         
-        LevelUp(entt::entity entity, int level)
+        LevelUp(entt::entity entity, uint32_t level)
         : entity(entity), newLevel(level) {}
 
         EVENT_TYPE(LevelUp);

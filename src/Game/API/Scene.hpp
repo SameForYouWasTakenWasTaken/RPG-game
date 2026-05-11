@@ -14,6 +14,7 @@
 #include "Systems/InventorySystem.hpp"
 #include "Systems/PickupSystem.hpp"
 #include "Systems/ProgressionSystem.hpp"
+#include "Systems/RewardSystem.hpp"
 #include "vendor/entt/entt.hpp"
 
 namespace Game::Layers
@@ -38,7 +39,8 @@ namespace Game
         Game::Systems::AISystem AI{registry, eventBus};
         Game::Systems::Combat Combat{registry, eventBus};
         Game::Systems::Progression Progression{registry, eventBus};
-        
+        Game::Systems::Reward Reward{registry, eventBus};
+
         Game::Systems::Inventory Inventory{registry};
         Game::Systems::Pickup Pickup{registry};
         Game::Systems::Movement Movement{registry};

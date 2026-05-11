@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 namespace Game::Components
 {
     struct CombatStats
@@ -11,10 +13,10 @@ namespace Game::Components
 
     struct Progression
     {
-        int Level = 1;
-        int XP = 0;
+        uint32_t Level = 1;
+        uint32_t XP = 0;
 
-        int Gold = 0;
+        uint32_t Gold = 0;
 
         bool CanEarnXP = true;
     };
@@ -22,7 +24,7 @@ namespace Game::Components
     // Reward component for any task
     struct Reward
     {
-        int Gold = 0;
-        int XP = 0;
+        uint32_t Gold = 0;
+        uint32_t XP = 0;
     };
 }
