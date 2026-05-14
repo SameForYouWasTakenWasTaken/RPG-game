@@ -105,5 +105,6 @@ namespace Game
         m_SystemsScheduler.Add(Pickup);
         m_SystemsScheduler.Add(Inventory);
         m_SystemsScheduler.Add(Progression);
+        m_SystemsScheduler.Add(Reward);
     }
 }
