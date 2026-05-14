@@ -27,13 +27,14 @@ namespace Game::Systems
             
             if (inserted)
             {
-                //it->second = sf::Texture();
-
                 if (!it->second.loadFromFile(path))
-                    return Global::Types::TextureHandle{};
+                    return Global::Types::TextureHandle{
+                            0, 
+                            Global::Types::TextureStatus::NoFile
+                        };
             }
 
-            return Global::Types::TextureHandle{id};
+            return Global::Types::TextureHandle{id, Global::Types::TextureStatus::Valid};
         };
 
         static sf::Texture& GetTexture(Global::Types::TextureHandle handle)
