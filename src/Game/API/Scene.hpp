@@ -4,12 +4,17 @@
 #include <vector>
 
 #include <Engine/Events/EventBus.hpp>
+#include "Engine/Systems/Scheduler.hpp"
 #include "Layer.hpp"
 
 #include "Systems/CombatSystem.hpp"
 #include "Systems/EnemyAI.hpp"
 #include "Systems/Hierarchy.hpp"
 #include "Systems/MovementSystem.hpp"
+#include "Systems/InventorySystem.hpp"
+#include "Systems/PickupSystem.hpp"
+#include "Systems/ProgressionSystem.hpp"
+#include "Systems/RewardSystem.hpp"
 #include "vendor/entt/entt.hpp"
 
 namespace Game::Layers
@@ -22,6 +27,7 @@ namespace Game
     class Scene
     {
         std::vector<std::shared_ptr<Layers::ILayer>> m_Layers{};
+        Core::Systems::Scheduler<Core::Systems::ISystem> m_SystemsScheduler;
     public:
         entt::registry registry{};
 
@@ -32,6 +38,11 @@ namespace Game
         // Basic systems
         Game::Systems::AISystem AI{registry, eventBus};
         Game::Systems::Combat Combat{registry, eventBus};
+        Game::Systems::Progression Progression{registry, eventBus};
+        Game::Systems::Reward Reward{registry, eventBus};
+
+        Game::Systems::Inventory Inventory{registry};
+        Game::Systems::Pickup Pickup{registry};
         Game::Systems::Movement Movement{registry};
         
         Scene();

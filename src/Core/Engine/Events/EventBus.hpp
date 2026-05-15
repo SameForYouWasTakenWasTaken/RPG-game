@@ -10,6 +10,11 @@ namespace Core::Events
         entt::dispatcher m_Dispatcher;
         public:
         EventBus() = default;
+        ~EventBus()
+        {
+            m_Dispatcher.clear();
+            
+        }
 
         template <typename TEventFire, typename... Args>
         void Queue(Args&&... args);
