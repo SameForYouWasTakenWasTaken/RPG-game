@@ -14,8 +14,8 @@ A top-down 2D action RPG built with C++ and SFML. Battle enemies, collect loot, 
 ### Build
 
 ```bash
-git clone https://github.com/your-repo/soul-eater.git
-cd soul-eater
+git clone https://github.com/SameForYouWasTakenWasTaken/RPG-Game.git
+cd RPG-Game
 mkdir build && cd build
 cmake ..
 cmake --build . --config Release
