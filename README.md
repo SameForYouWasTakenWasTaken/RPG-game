@@ -20,7 +20,8 @@ and not suitable for a stable release.
 ```bash
 git clone https://github.com/SameForYouWasTakenWasTaken/RPG-Game.git
 cd RPG-Game
-mkdir build && cd build
+mkdir build
+cd build
 cmake ..
 cmake --build . --config Release
 ```
