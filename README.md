@@ -1,8 +1,12 @@
-# Soul Eater RPG
+# RPG Game
 
 A top-down 2D action RPG built with C++ and SFML. Battle enemies, collect loot, and progress through levels in this ECS-powered game.
 
-![Game Preview]
+## DISCLAIMER
+Writing documentation and README's is boring, some stuff might be outdated.
+
+Furthermore, this game is in **ALPHA** stages -- meaning for you non technical nerds: this is a very early in-dev game
+and not suitable for a stable release.
 
 ## Quick Start
 

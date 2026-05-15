@@ -1,7 +1,6 @@
 #pragma once
 
 #include "glm/glm.hpp"
-#include "Components/States/Combat.hpp"
 #include "Engine/Events/EventBus.hpp"
 #include "Engine/Systems/ISystem.hpp"
 #include "vendor/entt/entt.hpp"
