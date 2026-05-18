@@ -39,12 +39,13 @@ namespace Game
         
         // Basic systems
         Game::Systems::AISystem AI{registry, eventBus, SpatialGrid};
+        Game::Systems::Pickup Pickup{registry, SpatialGrid};
+        
         Game::Systems::Combat Combat{registry, eventBus};
         Game::Systems::Progression Progression{registry, eventBus};
         Game::Systems::Reward Reward{registry, eventBus};
-
+        
         Game::Systems::Inventory Inventory{registry};
-        Game::Systems::Pickup Pickup{registry};
         Game::Systems::Movement Movement{registry};
         
         Scene();

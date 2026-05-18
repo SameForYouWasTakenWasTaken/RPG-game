@@ -22,44 +22,6 @@ namespace Game::Systems
                 Game::Components::Humanoid>(entt::exclude<Game::Components::Dead>);
     }
 
-    /**
-     * Finds the closest player entity to a given enemy world position.
-     *
-     * The selection uses the player's origin (player world position plus the transform's local origin)
-     * and compares Euclidean distances to determine the nearest player.
-     *
-     * @param nearestEnemyPos Enemy position in world coordinates used as the reference point.
-     * @return entt::entity The nearest player entity, or `entt::null` if no players are present.
-     */
-    entt::entity AISystem::GetNearestPlayer(const glm::vec2& nearestEnemyPos, float enemyDetectionRadius)
-    {
-        entt::entity targetPlayer = entt::null;
-        float bestDist = std::numeric_limits<float>::max();
-
-        auto nearestPlayers = m_SpatialGrid.QueryRadius(
-            nearestEnemyPos,
-            enemyDetectionRadius,
-            [this](auto entity){
-            return m_SceneRegistry.all_of<Entities::PlayerTag>(entity);
-        });
-
-        for (auto player : nearestPlayers)
-        {
-            auto& PlayerTransform = m_SceneRegistry.get<Core::Components::Transform>(player);
-            auto playerOriginPosition = PlayerTransform.GetWorldPos() + PlayerTransform.GetLocalOrigin();
-
-            glm::vec2 delta = playerOriginPosition - nearestEnemyPos;
-            float dist = glm::dot(delta, delta); // Better  than glm::distance
-             
-            if (dist < bestDist)
-            {
-                bestDist = dist;
-                targetPlayer = player;
-            }
-        }
-
-        return targetPlayer;
-    }
     void AISystem::OnUpdate(float dt)
     {
         auto enemies = m_SceneRegistry.view<
@@ -75,7 +37,12 @@ namespace Game::Systems
             auto& enemyComp = m_SceneRegistry.get<Game::Components::Enemy>(enemy);
 
             // find closest player
-            entt::entity targetPlayer = GetNearestPlayer(enemyTransform.GetWorldPos(), enemyComp.PlayerDetectionDist);
+            auto targetPlayer = m_SpatialGrid.FindNearest(
+                enemyTransform.GetWorldPos(), enemyComp.PlayerDetectionDist, 
+                [&](auto entity){
+                    return m_SceneRegistry.all_of<Entities::PlayerTag>(entity);
+                });
+
             if (targetPlayer == entt::null)
                 continue;
 
@@ -104,7 +71,7 @@ namespace Game::Systems
         auto& EnemyComponent = r.get<Game::Components::Enemy>(enemy);
 
         auto distance = glm::distance(OtherTransform.GetWorldPos(), EnemyTransform.GetWorldPos());
-
+        
         if (distance <= EnemyComponent.PlayerHearDetectionDist)
             return true;
 
