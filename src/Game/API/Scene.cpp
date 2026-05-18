@@ -106,5 +106,15 @@ namespace Game
         m_SystemsScheduler.Add(Inventory);
         m_SystemsScheduler.Add(Progression);
         m_SystemsScheduler.Add(Reward);
+        
+        m_SystemsScheduler.Add(SpatialGrid)
+            .After(hierarchy)
+            .After(Movement)
+            .After(AI)
+            .After(Combat)
+            .After(Inventory)
+            .After(Pickup)
+            .After(Progression)
+            .After(Reward);
     }
 }

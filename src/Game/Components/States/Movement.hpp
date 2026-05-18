@@ -19,7 +19,4 @@ namespace Game::Components
     };
     
     struct Idle{};
-
-    // AI
-    struct Chasing{};
 }

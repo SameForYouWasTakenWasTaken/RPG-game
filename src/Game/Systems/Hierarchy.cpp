@@ -20,7 +20,6 @@ namespace Game::Systems
             auto& h = roots.get<Components::Hierarchy>(entity);
             if (h.Parent == entt::null)
                 UpdateRecursive(entity, glm::mat3(1.f));
-            
         }
     }
 

@@ -54,6 +54,7 @@ namespace Core::Systems
         Builder& After(T& other)
         {
             Node* otherNode = scheduler.GetNode(other);
+            
             primaryNode->dependencies.push_back(otherNode);
             return *this;
         }

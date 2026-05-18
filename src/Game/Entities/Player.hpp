@@ -11,11 +11,13 @@
 #include "Components/Sprite.hpp"
 #include "Components/Humanoid.hpp"
 #include "Default.hpp"
-
+#include "Components/LonelyTags.hpp"
+#include <map>
 namespace Game::Entities
 {
     struct PlayerTag
     {};
+    
     static inline auto PlayerTextureHandle = Systems::ResourceManager::LoadTexture(RESOURCES_DIRECTORY "Textures/player.png");
     
     /**
@@ -39,7 +41,6 @@ namespace Game::Entities
         auto& Geometry = registry.emplace<Core::Components::Geometry>(entity);
 
         auto& texture = Systems::ResourceManager::GetTexture(PlayerTextureHandle);
-        
         auto& weapon = registry.emplace<Game::Components::Weapon>(entity);
         auto& inventory = registry.emplace<Game::Components::Inventory>(entity);
         auto& progression = registry.emplace<Game::Components::Progression>(entity);
@@ -52,11 +53,9 @@ namespace Game::Entities
 
         Transform.Scale({150.f, 150.f});
         Transform.SetOrigin(Transform.GetLocalSize() / 2.f);
-
         Humanoid.Speed = 500.f;
-
         
-
+        registry.emplace<Game::Components::LonelyTags::Spatial>(entity);
         return entity;
     }
 }
