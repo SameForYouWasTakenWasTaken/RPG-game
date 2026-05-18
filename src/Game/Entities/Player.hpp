@@ -11,11 +11,12 @@
 #include "Components/Sprite.hpp"
 #include "Components/Humanoid.hpp"
 #include "Default.hpp"
-
+#include "Components/LonelyTags.hpp"
 namespace Game::Entities
 {
     struct PlayerTag
     {};
+    
     static inline auto PlayerTextureHandle = Systems::ResourceManager::LoadTexture(RESOURCES_DIRECTORY "Textures/player.png");
     
     /**
@@ -57,6 +58,7 @@ namespace Game::Entities
 
         
 
+        registry.emplace<Game::Components::LonelyTags::Spatial>(entity);
         return entity;
     }
 }

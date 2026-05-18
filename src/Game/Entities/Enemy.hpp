@@ -10,6 +10,7 @@
 #include "Components/Sprite.hpp"
 #include "Components/Enemy.hpp"
 #include "Default.hpp"
+#include "Components/LonelyTags.hpp"
 
 namespace Game::Entities
 {
@@ -56,6 +57,7 @@ namespace Game::Entities
         Transform.Scale({150.f, 150.f});
         Transform.SetOrigin(Transform.GetLocalSize() / 2.f);
 
+        registry.emplace<Game::Components::LonelyTags::Spatial>(entity);
         return entity;
     }
 }

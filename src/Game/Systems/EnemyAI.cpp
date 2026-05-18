@@ -1,6 +1,7 @@
 #include "EnemyAI.hpp"
 #include "Components/Enemy.hpp"
 #include "Components/Humanoid.hpp"
+#include "Components/LonelyTags.hpp"
 #include "Components/States/Death.hpp"
 #include "Engine/Components/Transform.hpp"
 #include "Entities/Enemy.hpp"
@@ -30,17 +31,26 @@ namespace Game::Systems
      * @param nearestEnemyPos Enemy position in world coordinates used as the reference point.
      * @return entt::entity The nearest player entity, or `entt::null` if no players are present.
      */
-    entt::entity AISystem::GetNearestPlayer(const glm::vec2& nearestEnemyPos)
+    entt::entity AISystem::GetNearestPlayer(const glm::vec2& nearestEnemyPos, float enemyDetectionRadius)
     {
         entt::entity targetPlayer = entt::null;
         float bestDist = std::numeric_limits<float>::max();
-        
-        for (auto player : GetPlayers())
+
+        auto nearestPlayers = m_SpatialGrid.QueryRadius(
+            nearestEnemyPos,
+            enemyDetectionRadius,
+            [this](auto entity){
+            return m_SceneRegistry.all_of<Entities::PlayerTag>(entity);
+        });
+
+        for (auto player : nearestPlayers)
         {
             auto& PlayerTransform = m_SceneRegistry.get<Core::Components::Transform>(player);
             auto playerOriginPosition = PlayerTransform.GetWorldPos() + PlayerTransform.GetLocalOrigin();
-            float dist = glm::distance(playerOriginPosition, nearestEnemyPos);
-            
+
+            glm::vec2 delta = playerOriginPosition - nearestEnemyPos;
+            float dist = glm::dot(delta, delta); // Better  than glm::distance
+             
             if (dist < bestDist)
             {
                 bestDist = dist;
@@ -54,6 +64,7 @@ namespace Game::Systems
     {
         auto enemies = m_SceneRegistry.view<
             Entities::EnemyTag,
+            Game::Components::LonelyTags::Spatial,
             Core::Components::Transform,
             Game::Components::Enemy,
             Game::Components::Humanoid>();
@@ -62,26 +73,23 @@ namespace Game::Systems
         {
             auto& enemyTransform = m_SceneRegistry.get<Core::Components::Transform>(enemy);
             auto& enemyComp = m_SceneRegistry.get<Game::Components::Enemy>(enemy);
-            bool isChasing = m_SceneRegistry.all_of<Game::Components::Chasing>(enemy);
 
             // find closest player
-            entt::entity targetPlayer = GetNearestPlayer(enemyTransform.GetWorldPos());
+            entt::entity targetPlayer = GetNearestPlayer(enemyTransform.GetWorldPos(), enemyComp.PlayerDetectionDist);
             if (targetPlayer == entt::null)
                 continue;
 
-            bool detected = CanEnemyDetect(enemy, targetPlayer);
-            if (!detected)
-            {
-                m_SceneRegistry.remove<Game::Components::Chasing>(enemy);
-                continue;
-            }
-
             auto playerTransform = m_SceneRegistry.get<Core::Components::Transform>(targetPlayer);
-            auto dist = glm::distance(playerTransform.GetWorldPos(), enemyTransform.GetWorldPos());
-            
-            if (dist >= enemyComp.PlayerMaxDistance)
-                ChaseEntity(enemy, targetPlayer, dt);
+            auto delta = playerTransform.GetWorldPos() - enemyTransform.GetWorldPos();
+            auto dist = glm::dot(delta, delta);
 
+            const float maxDistSq =
+                enemyComp.PlayerMaxDistance *
+                enemyComp.PlayerMaxDistance;
+                    
+            if (dist >= maxDistSq)
+                ChaseEntity(enemy, targetPlayer, dt);
+ 
             if (Combat::InAttackRange(m_SceneRegistry, enemy, targetPlayer))
                 Combat::AttackEntity(m_SceneRegistry, m_SceneEventBus, enemy, targetPlayer);
         }
@@ -140,7 +148,6 @@ namespace Game::Systems
         auto& enemyComponent = m_SceneRegistry.get<Components::Enemy>(enemy);
 
         Movement::LinearGoTo(enemyTransform, playerTransform.GetWorldPos(), enemyHumanoid.RunSpeed * dt);
-        m_SceneRegistry.emplace_or_replace<Game::Components::Chasing>(enemy);
     }
 
     bool AISystem::CanEnemyDetect(entt::entity enemy, entt::entity other)

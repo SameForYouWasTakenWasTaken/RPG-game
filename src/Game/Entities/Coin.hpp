@@ -8,6 +8,7 @@
 #include "Systems/ResourceManager.hpp"
 #include "vendor/entt/entt.hpp"
 #include "Default.hpp"
+#include "Components/LonelyTags.hpp"
 
 namespace Game::Entities
 {
@@ -43,6 +44,8 @@ namespace Game::Entities
         item.StackCount = 100.f;
         
         auto& pickable = registry.emplace<Game::Components::Pickable>(entity);
+
+        registry.emplace<Game::Components::LonelyTags::Spatial>(entity);
         return entity;
     }
 }
