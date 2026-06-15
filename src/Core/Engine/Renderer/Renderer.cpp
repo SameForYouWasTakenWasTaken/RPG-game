@@ -45,7 +45,9 @@ namespace Core::Rendering
             const auto& src = Object.Geometry->vertices;
 
             auto& dst = batch.Geometry.vertices;
-            dst.reserve(dst.size() + src.size());
+
+            if (dst.capacity() < dst.size() + src.size())
+                dst.reserve(dst.size() + src.size());
 
             for (const auto& vertex : src)
             {
