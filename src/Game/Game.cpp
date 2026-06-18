@@ -7,7 +7,7 @@
 #include "GameSettings.hpp"
 #include "API/Scene.hpp"
 #include "Layers/MainLayer/MainLayer.hpp"
-#include <iostream>
+#include "Layers/RenderLayer/RenderLayer.hpp"
 #include <memory>
 
 #include "Engine/Events/InputEvent.hpp"
@@ -34,15 +34,15 @@ namespace Game
     void Application::Run()
     {
         Core::Engine& engine = Core::Engine::Get();
-        Core::Rendering::Renderer* renderer = engine.GetRenderer();
-        assert(renderer);
 
         Core::EngineContext& context = engine.GetContext(); 
 
         Scene MainScene;
 
         auto MainLayer = std::make_shared<Layers::MainLayer>();
+        auto RenderLayer = std::make_shared<Layers::RenderLayer>();
         MainScene.AddLayer(MainLayer);
+        MainScene.AddLayer(RenderLayer);
 
         sf::Clock clock;
         float then = clock.getElapsedTime().asSeconds();
@@ -65,14 +65,10 @@ namespace Game
 
             m_Window.Clear();
 
-            renderer->Begin();
-
             MainScene.OnUpdate(dt);
             MainScene.OnFixed(STEP);
             MainScene.OnRender();
 
-            renderer->End();
-            
             m_Window.Display();
             
             FrameMark;

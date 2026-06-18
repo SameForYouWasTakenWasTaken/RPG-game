@@ -12,7 +12,7 @@
 
 namespace Game::Entities
 {
-    static inline auto CoinTextureHandle = Game::Systems::ResourceManager::LoadTexture(RESOURCES_DIRECTORY "Textures/coin.png");
+    static inline auto CoinTextureHandle = Game::Systems::ResourceManager::LoadTexture(RESOURCES_DIRECTORY "Shared/Textures/coin.png");
     /**
      * @brief Creates and configures an ECS entity representing a coin.
      *
@@ -38,6 +38,7 @@ namespace Game::Entities
 
         auto& sprite = registry.emplace<Game::Components::Sprite>(entity);
         sprite.TextureHandle = CoinTextureHandle;
+        sprite.zIndex = 12;
         
         auto& item = registry.emplace<Game::Components::Item>(entity);
         item.Name = "Coin";

@@ -18,7 +18,7 @@ namespace Game::Entities
     struct PlayerTag
     {};
     
-    static inline auto PlayerTextureHandle = Systems::ResourceManager::LoadTexture(RESOURCES_DIRECTORY "Textures/player.png");
+    static inline auto PlayerTextureHandle = Systems::ResourceManager::LoadTexture(RESOURCES_DIRECTORY "Shared/Textures/player.png");
     
     /**
      * @brief Creates and registers a player entity with default player components and initial configuration.
@@ -48,7 +48,7 @@ namespace Game::Entities
         
         Geometry = Core::Components::CreateDefaultGeometry(texture, sf::Color::White);
         auto& sprite = registry.emplace<Game::Components::Sprite>(entity, PlayerTextureHandle); 
-        sprite.zIndex = 1;
+        sprite.zIndex = 11;
         registry.emplace<PlayerTag>(entity);
 
         Transform.Scale({150.f, 150.f});
