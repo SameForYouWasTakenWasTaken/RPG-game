@@ -81,6 +81,7 @@ namespace Game::API
         });
         
         Loaded = !Layers.empty() && !TileSets.empty();
+        
         if (Loaded)
             JSONMapDirectory = mapPath;
     }
