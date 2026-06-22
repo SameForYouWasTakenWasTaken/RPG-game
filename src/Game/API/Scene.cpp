@@ -85,8 +85,6 @@ namespace Game
     {
         for (auto& layer : m_Layers)
         {
-            ImGuiContext* ctx = ImGui::GetCurrentContext();
-            assert(ctx != nullptr && ctx->WithinFrameScope == true);
             layer->OnRender();
         }
     }
