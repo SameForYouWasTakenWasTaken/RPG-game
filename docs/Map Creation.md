@@ -19,14 +19,17 @@ When working with Tiled you will produce three core asset types:
 ## Architecture Details
 
 ### Tilemaps
-- Exported as `.tmj` (Tiled Map JSON) files.  
-- Parsed at runtime with **nlohmann::json** to extract layout, layers, and referenced tilesets.  
+
+- Exported as `.tmj` (Tiled Map JSON) files.
+- Parsed at runtime with **nlohmann::json** to extract layout, layers, and referenced tilesets.
 - Store them under `Resources/TileMaps/<MapName>/` for clarity.
 
 ### Tilesets
+
 Tilesets require a bit more care because they involve XML parsing and path resolution.
 
 #### Backend loading flow (simplified)
+
 ```cpp
 void TileMap::Load(const JSONPath& mapPath)
 {
@@ -65,9 +68,10 @@ bool TileSet::LoadXMLFromTSX(const TSXPath& path)
 5. From the `.tsx` location, go up one folder (`Shared/TileSets → Shared`) then into `Textures` →  
    `src/Game/Resources/Shared/Textures/player.png`
 
-> **Tip:** For the people who don't know, think of each `..` in the JSON or XML as “go up one directory” from the current file’s location.
+> **Tip:** For the people who don't know, think of each `..` in the JSON or XML as "go up one directory" from the current file's location.
 
 #### Recommended folder layout
+
 | Folder | Location (relative to `src/Game/Resources/`) | Purpose | Subfolders allowed? |
 |--------|---------------------------------------------|---------|---------------------|
 | **TileSets** | `Shared/Textures/` | Individual tileset collections (e.g. `grass.tsx`, `desert.tsx`) | ✅ |
@@ -98,7 +102,7 @@ Fixing this manually by editing paths is error‑prone—just work from the corr
 4. **Verify paths**  
    Open the exported `.tmj` and ensure all `"source"` entries correctly point upward to your tileset locations.
 
-5. **(OPTIONAL) Test in-game**  
+5. **(OPTIONAL) Test in-game**
    Launch the game and confirm the map loads without errors. (Be sure it gets loaded, developer help required)
 
 ---

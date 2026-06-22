@@ -6,6 +6,7 @@ namespace Game::UI
 {
     class ConsoleUI : public Layers::ILayer
     {
+        char m_InputBuffer[256] = "";
     public:
         ConsoleUI() = default;
 

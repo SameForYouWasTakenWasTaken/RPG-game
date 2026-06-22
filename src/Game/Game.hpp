@@ -14,6 +14,7 @@ namespace Game
         bool PollEvents(Scene& scene, std::optional<sf::Event> e);
     public:
         Application(GameSettings settings);
+        ~Application();
 
         void Run();
     };

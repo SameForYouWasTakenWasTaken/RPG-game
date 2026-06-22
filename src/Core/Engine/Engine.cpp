@@ -9,10 +9,6 @@ namespace Core
 {
     void Engine::Init(Rendering::Window& window)
     {
-        m_Context.SFContext.majorVersion = 4;
-        m_Context.SFContext.minorVersion = 6;
-
-        m_Context.SFContext.attributeFlags = sf::ContextSettings::Attribute::Core;
         Rendering::Window* NewWindow = &window;
 
         m_Context.ActiveWindow = NewWindow;

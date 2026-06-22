@@ -67,11 +67,23 @@ namespace Game::API
                 continue;
 
             TileLayer outLayer;
-            
-            outLayer.height = layer.at("height").get<int>(); 
-            outLayer.width = layer.at("width").get<int>(); 
+
+            outLayer.height = layer.at("height").get<int>();
+            outLayer.width = layer.at("width").get<int>();
             outLayer.data = layer.at("data").get<TileLayer::Tiles>();
             outLayer.visible = layer.at("visible").get<bool>();
+
+            // Validate layer properties
+            if (outLayer.width <= 0 || outLayer.height <= 0)
+            {
+                throw std::runtime_error("Invalid layer dimensions: width and height must be positive");
+            }
+            if (outLayer.data.size() != static_cast<size_t>(outLayer.width * outLayer.height))
+            {
+                throw std::runtime_error("Layer data size mismatch: expected " +
+                    std::to_string(outLayer.width * outLayer.height) + " but got " +
+                    std::to_string(outLayer.data.size()));
+            }
 
             Layers.push_back(std::move(outLayer));
         }
@@ -152,10 +164,11 @@ namespace Game::API
                     continue;
 
                 const TileSet* tileset = FindNearestTileset(gid);
-                
-                assert(tileset->TextureHandle.IsValid());
+
                 if (!tileset)
                     continue;
+
+                assert(tileset->TextureHandle.IsValid());
 
                 int localID = gid - tileset->FirstGid;
 

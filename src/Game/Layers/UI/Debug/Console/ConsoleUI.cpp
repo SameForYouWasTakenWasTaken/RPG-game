@@ -38,8 +38,7 @@ namespace Game::UI
             backend::Console::GetOutputAsString([](const auto& value, auto& str)
             {
                 if (str == "\n") return; // ignore new lines
-                std::string asString = "[CMD] > " + str;
-                ImGui::Text(asString.c_str());
+                ImGui::Text("[CMD] > %s", str.c_str());
             });
 
             // Auto-scroll to bottom on new items
@@ -55,18 +54,20 @@ namespace Game::UI
         ImGui::Separator();
 
         // 3. Command Input Bar
-        static char inputBuffer[256] = "";
         bool reclaim_focus = false;
 
         // Input text triggers when the user hits Enter
         ImGuiInputTextFlags input_flags = ImGuiInputTextFlags_EnterReturnsTrue;
 
         ImGui::PushItemWidth(-1); // Stretch input box to fill window width
-        if (ImGui::InputText("##Input", inputBuffer, IM_ARRAYSIZE(inputBuffer), input_flags))
+        if (ImGui::InputText("##Input", m_InputBuffer, IM_ARRAYSIZE(m_InputBuffer), input_flags))
         {
-            std::string command(inputBuffer);
+            std::string command(m_InputBuffer);
 
             // Strip whitespace/trim check
+            command.erase(0, command.find_first_not_of(" \t\n\r"));
+            command.erase(command.find_last_not_of(" \t\n\r") + 1);
+
             if (!command.empty())
             {
                 // Log the command visually in your backend console tracking list
@@ -88,7 +89,7 @@ namespace Game::UI
             }
 
             // Clear the text entry box and set focus back
-            inputBuffer[0] = '\0';
+            m_InputBuffer[0] = '\0';
             reclaim_focus = true;
         }
         ImGui::PopItemWidth();
@@ -97,7 +98,7 @@ namespace Game::UI
         ImGui::SetItemDefaultFocus();
         if (reclaim_focus)
         {
-            ImGui::SetKeyboardFocusHere(-1);
+            ImGui::SetKeyboardFocusHere(-1); // -1 refers to the previous item
         }
 
         ImGui::End();

@@ -99,8 +99,7 @@ namespace Game::Systems
             Core::Components::Transform& transform =
                 m_SceneRegistry.get<Core::Components::Transform>(entity);
 
-            auto entityPos =
-                transform.GetWorldPos() + transform.GetLocalOrigin();
+            auto entityPos = transform.GetWorldPos();
 
             auto delta = pos - entityPos;
 

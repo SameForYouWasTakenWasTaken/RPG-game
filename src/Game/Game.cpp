@@ -24,19 +24,32 @@ using namespace Core::Events;
 namespace Game
 {
     Application::Application(GameSettings settings)
-    : m_Window({
-        .width = settings.windowWidth,
-        .height = settings.windowHeight,
-        .title = settings.windowTitle,
-    })
     {
         Core::Engine& engine = Core::Engine::Get();
+
+        // Configure OpenGL context settings before Window creation
+        engine.GetContext().SFContext.majorVersion = 4;
+        engine.GetContext().SFContext.minorVersion = 6;
+        engine.GetContext().SFContext.attributeFlags = sf::ContextSettings::Attribute::Core;
+
+        // Now construct Window with proper context settings
+        m_Window = Core::Rendering::Window({
+            .width = settings.windowWidth,
+            .height = settings.windowHeight,
+            .title = settings.windowTitle,
+        });
+
         engine.Init(m_Window);
 
         if (!ImGui::SFML::Init(m_Window.GetRenderWindow()))
             throw std::runtime_error("SFML Init Failed");
     }
-    
+
+    Application::~Application()
+    {
+        ImGui::SFML::Shutdown();
+    }
+
     void Application::Run()
     {
         Core::Engine& engine = Core::Engine::Get();

@@ -63,9 +63,12 @@ namespace Game::Layers
             m_Controllers.Add(*m_PlayerMovementController);
 
             auto map = API::TileMap();
-            
+
             map.Load(RESOURCES_DIRECTORY "TileMaps/Blablabla/random-stuff.tmj");
-            map.CreateTileEntities(registry);
+            if (map.Loaded)
+            {
+                map.CreateTileEntities(registry);
+            }
 
             ConnectToEvents();
         }

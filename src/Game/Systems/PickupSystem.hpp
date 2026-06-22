@@ -14,6 +14,7 @@ namespace Game::Systems
         * @brief Constructs the Pickup system with a scene entity registry reference.
         *
         * @param registry Reference to the entt::registry used to query and modify scene entities.
+        * @param spatialGrid Reference to the SpatialGrid used for spatial queries.
         */
         Pickup(entt::registry& registry, SpatialGrid& spatialGrid) 
         : m_SceneRegistry(registry), m_SpatialGrid(spatialGrid) {}

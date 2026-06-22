@@ -20,18 +20,24 @@ namespace Game::API
         auto* root = doc.FirstChildElement("tileset");
         if (!root)
             return false;
-        
-        root->QueryIntAttribute("tilewidth", &Width);
-        root->QueryIntAttribute("tileheight", &Height);
+
+        if (root->QueryIntAttribute("tilewidth", &Width) != tinyxml2::XML_SUCCESS || Width <= 0)
+            return false;
+        if (root->QueryIntAttribute("tileheight", &Height) != tinyxml2::XML_SUCCESS || Height <= 0)
+            return false;
         // root->QueryIntAttribute("tilecount", &out.Count); // For batching
-        root->QueryIntAttribute("columns", &Columns);
+        if (root->QueryIntAttribute("columns", &Columns) != tinyxml2::XML_SUCCESS || Columns <= 0)
+            return false;
         
         auto* image = root->FirstChildElement("image");
         if (!image)
             return false;
-        
+
         const char* relative_source = image->Attribute("source");
-        auto fullSource = path/".."/relative_source; // source references the folder its in with the .tsx, so the extra ".." is needed
+        if (!relative_source)
+            return false;
+
+        auto fullSource = std::filesystem::path(path).parent_path() / relative_source;
         TextureHandle = Systems::ResourceManager::LoadTexture(fullSource);
         
         if (!TextureHandle.IsValid())

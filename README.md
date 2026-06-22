@@ -2,10 +2,9 @@
 
 A top-down 2D action RPG built with C++ and SFML. Battle enemies, collect loot, and progress through levels in this ECS-powered game.
 
-> **⚠️ WARNING**  
+> **⚠️ WARNING**
 > This documentation is maintained by a single developer and may occasionally become outdated. Please verify against the codebase when in doubt.
-
-> Furthermore, this game is in **ALPHA** stages -- meaning his is a very early in-dev game
+> Furthermore, this game is in **ALPHA** stages -- meaning this is a very early in-dev game
 and not suitable for a stable release.
 
 ## Quick Start

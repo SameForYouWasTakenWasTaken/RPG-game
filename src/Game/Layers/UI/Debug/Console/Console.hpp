@@ -11,14 +11,13 @@ namespace Game::UI::backend
         int,
         float,
         double,
-        std::string,
-        const char*>;
+        std::string>;
 
     class Console
     {
 
         template <typename T>
-        static void Push(const T& t);
+        static void Push(T&& t);
     public:
         inline static std::vector<Value> Output{};
 
@@ -35,15 +34,22 @@ namespace Game::UI::backend
     };
 
     template <typename T>
-    void Console::Push(const T& t)
+    void Console::Push(T&& t)
     {
-        Output.push_back(t);
+        if constexpr (std::is_same_v<std::decay_t<T>, const char*> || std::is_same_v<std::decay_t<T>, char*>)
+        {
+            Output.push_back(std::string(t));
+        }
+        else
+        {
+            Output.push_back(std::forward<T>(t));
+        }
     }
 
     template <typename ... T>
     void Console::Println(T&&... text)
     {
-        Print(text..., std::string("\n"));
+        Print(std::forward<T>(text)..., "\n");
     }
 
     template <typename ... T>
@@ -61,14 +67,12 @@ namespace Game::UI::backend
         {
             std::visit([&oss, &cb, &value](const auto& v)
             {
-                std::ostringstream temp_ss;
-                temp_ss << v;
-
-                std::string asString = temp_ss.str();
-                oss << asString;
+                oss << v;
 
                 // returns the std::variant and the string version
-                cb(value, asString);
+                std::ostringstream temp_ss;
+                temp_ss << v;
+                cb(value, temp_ss.str());
             }, value);
         }
 

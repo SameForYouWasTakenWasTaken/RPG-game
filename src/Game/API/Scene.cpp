@@ -85,7 +85,8 @@ namespace Game
     {
         for (auto& layer : m_Layers)
         {
-            assert(ImGui::GetCurrentContext()->WithinFrameScope == true);
+            ImGuiContext* ctx = ImGui::GetCurrentContext();
+            assert(ctx != nullptr && ctx->WithinFrameScope == true);
             layer->OnRender();
         }
     }
@@ -106,21 +107,16 @@ namespace Game
     {
         m_SystemsScheduler.Add(hierarchy);
         m_SystemsScheduler.Add(Movement);
+
+        m_SystemsScheduler.Add(SpatialGrid)
+            .After(hierarchy)
+            .After(Movement);
+
         m_SystemsScheduler.Add(AI);
         m_SystemsScheduler.Add(Combat);
         m_SystemsScheduler.Add(Pickup);
         m_SystemsScheduler.Add(Inventory);
         m_SystemsScheduler.Add(Progression);
         m_SystemsScheduler.Add(Reward);
-        
-        m_SystemsScheduler.Add(SpatialGrid)
-            .After(hierarchy)
-            .After(Movement)
-            .After(AI)
-            .After(Combat)
-            .After(Inventory)
-            .After(Pickup)
-            .After(Progression)
-            .After(Reward);
     }
 }
