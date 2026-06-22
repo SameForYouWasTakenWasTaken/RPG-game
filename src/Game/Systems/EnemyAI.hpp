@@ -17,7 +17,6 @@ namespace Game::Systems
         inline auto GetPlayers();
 
         void ChaseEntity(entt::entity enemy, entt::entity other, float dt);
-        entt::entity GetNearestPlayer(const glm::vec2& nearestEnemyPos, float enemyDetectionRadius);
     public:
         AISystem(entt::registry& registry, Core::Events::EventBus& bus, SpatialGrid& Spatial) 
         : m_SceneRegistry(registry), m_SceneEventBus(bus), m_SpatialGrid(Spatial) {}

@@ -83,12 +83,6 @@ namespace Game::Systems
             auto& itemComponent = m_SceneRegistry.get<Game::Components::Item>(itemEntity);
             
             if (!itemPickable.CanBePicked) continue;
-            
-            auto players = m_SpatialGrid.Query(
-                itemTransform.GetWorldPos(), 
-                itemPickable.Radius, [this](auto entity){
-                    return m_SceneRegistry.all_of<Entities::PlayerTag>(entity);
-                });
 
             entt::entity nearestPlayer = m_SpatialGrid.FindNearest(
                                         itemTransform.GetWorldPos() - itemTransform.GetLocalOrigin(), itemPickable.Radius,
