@@ -35,11 +35,13 @@ namespace Core::Rendering
 
             auto batchKey = Global::Hash<uint32_t>(
                                                 Object.TextureHandle.id, 
-                                                Object.Geometry->vertexArray.getPrimitiveType()
+                                                Object.Geometry->vertexArray.getPrimitiveType(),
+                                                Object.zIndex
                                             );
 
             auto [it, inserted] = m_Batches.try_emplace(batchKey);
             auto& batch = it->second;
+            batch.zIndex = Object.zIndex;
 
             const sf::Transform transform = Object.Transform->ToSFML();
             const auto& src = Object.Geometry->vertices;
