@@ -8,10 +8,11 @@
 #include "Systems/ResourceManager.hpp"
 #include "vendor/entt/entt.hpp"
 #include "Default.hpp"
+#include "Components/LonelyTags.hpp"
 
 namespace Game::Entities
 {
-    static inline auto CoinTextureHandle = Game::Systems::ResourceManager::LoadTexture(RESOURCES_DIRECTORY "Textures/coin.png");
+    static inline auto CoinTextureHandle = Game::Systems::ResourceManager::LoadTexture(RESOURCES_DIRECTORY "Shared/Textures/coin.png");
     /**
      * @brief Creates and configures an ECS entity representing a coin.
      *
@@ -37,12 +38,15 @@ namespace Game::Entities
 
         auto& sprite = registry.emplace<Game::Components::Sprite>(entity);
         sprite.TextureHandle = CoinTextureHandle;
+        sprite.zIndex = 12;
         
         auto& item = registry.emplace<Game::Components::Item>(entity);
         item.Name = "Coin";
         item.StackCount = 100.f;
         
         auto& pickable = registry.emplace<Game::Components::Pickable>(entity);
+
+        registry.emplace<Game::Components::LonelyTags::Spatial>(entity);
         return entity;
     }
 }

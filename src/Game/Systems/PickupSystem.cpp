@@ -70,11 +70,6 @@ namespace Game::Systems
      */
     void Pickup::OnUpdate(float dt)
     {
-        auto Players = m_SceneRegistry.view<
-            Game::Entities::PlayerTag,
-            Game::Components::Inventory,
-            Core::Components::Transform>();
-        
         auto Pickables = m_SceneRegistry.view<
             Components::Pickable,
             Components::Item,
@@ -89,27 +84,13 @@ namespace Game::Systems
             
             if (!itemPickable.CanBePicked) continue;
 
-            entt::entity nearestPlayer{entt::null};
-            float bestDist = std::numeric_limits<float>::max();
-
-            for (auto playerEntity : Players)
-            {
-                auto& playerTransform = m_SceneRegistry.get<Core::Components::Transform>(playerEntity);
-                auto playerOriginPosition = playerTransform.GetWorldPos() + playerTransform.GetLocalOrigin();
-                auto itemOriginPosition = itemTransform.GetWorldPos() + itemTransform.GetLocalOrigin();
-
-                auto distToItem = glm::distance(itemOriginPosition, playerOriginPosition);
-                
-                if (distToItem <= bestDist)
-                {
-                    bestDist = distToItem;
-                    nearestPlayer = playerEntity;
-                }
-            }
-
-            if (nearestPlayer == entt::null) continue;
-            if (bestDist > itemPickable.Radius) continue;
-
+            entt::entity nearestPlayer = m_SpatialGrid.FindNearest(
+                                        itemTransform.GetWorldPos() - itemTransform.GetLocalOrigin(), itemPickable.Radius,
+                                        [&](auto entity){
+                                            return m_SceneRegistry.all_of<Entities::PlayerTag>(entity);
+                                        });
+            
+            if (nearestPlayer == entt::null) continue;           
             if (!PickUp(itemEntity, nearestPlayer))
                 std::cout << "Couldn't pick up item!" << std::endl;
         }

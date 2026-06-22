@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SpatialGrid.hpp"
 #include "glm/glm.hpp"
 #include "Engine/Events/EventBus.hpp"
 #include "Engine/Systems/ISystem.hpp"
@@ -11,14 +12,14 @@ namespace Game::Systems
     {
         entt::registry& m_SceneRegistry;
         Core::Events::EventBus& m_SceneEventBus;
+        SpatialGrid& m_SpatialGrid;
 
         inline auto GetPlayers();
 
         void ChaseEntity(entt::entity enemy, entt::entity other, float dt);
-        entt::entity GetNearestPlayer(const glm::vec2& nearestEnemyPos);
     public:
-        AISystem(entt::registry& registry, Core::Events::EventBus& bus) 
-        : m_SceneRegistry(registry), m_SceneEventBus(bus) {}
+        AISystem(entt::registry& registry, Core::Events::EventBus& bus, SpatialGrid& Spatial) 
+        : m_SceneRegistry(registry), m_SceneEventBus(bus), m_SpatialGrid(Spatial) {}
 
         static bool CanEnemyDetect(entt::registry& r, entt::entity enemy, entt::entity other);
         static bool CanEnemyHear(entt::registry& r, entt::entity enemy, entt::entity other);

@@ -11,12 +11,14 @@
 #include "Components/Sprite.hpp"
 #include "Components/Humanoid.hpp"
 #include "Default.hpp"
-
+#include "Components/LonelyTags.hpp"
+#include <map>
 namespace Game::Entities
 {
     struct PlayerTag
     {};
-    static inline auto PlayerTextureHandle = Systems::ResourceManager::LoadTexture(RESOURCES_DIRECTORY "Textures/player.png");
+    
+    static inline auto PlayerTextureHandle = Systems::ResourceManager::LoadTexture(RESOURCES_DIRECTORY "Shared/Textures/player.png");
     
     /**
      * @brief Creates and registers a player entity with default player components and initial configuration.
@@ -39,7 +41,6 @@ namespace Game::Entities
         auto& Geometry = registry.emplace<Core::Components::Geometry>(entity);
 
         auto& texture = Systems::ResourceManager::GetTexture(PlayerTextureHandle);
-        
         auto& weapon = registry.emplace<Game::Components::Weapon>(entity);
         auto& inventory = registry.emplace<Game::Components::Inventory>(entity);
         auto& progression = registry.emplace<Game::Components::Progression>(entity);
@@ -47,16 +48,14 @@ namespace Game::Entities
         
         Geometry = Core::Components::CreateDefaultGeometry(texture, sf::Color::White);
         auto& sprite = registry.emplace<Game::Components::Sprite>(entity, PlayerTextureHandle); 
-        sprite.zIndex = 1;
+        sprite.zIndex = 11;
         registry.emplace<PlayerTag>(entity);
 
         Transform.Scale({150.f, 150.f});
         Transform.SetOrigin(Transform.GetLocalSize() / 2.f);
-
         Humanoid.Speed = 500.f;
-
         
-
+        registry.emplace<Game::Components::LonelyTags::Spatial>(entity);
         return entity;
     }
 }

@@ -32,7 +32,7 @@ namespace Game::Layers {
         virtual void OnUpdate(float dt) = 0;
         virtual void OnFixed(float step) {};
 
-        virtual void OnRender() = 0;
+        virtual void OnRender() {}
         
         virtual void OnAttach() = 0;
         virtual void OnDetach() = 0;

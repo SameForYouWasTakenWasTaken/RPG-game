@@ -1,8 +1,7 @@
 # Architecture
 
-## WARNING
-Because I am a lazy goof and I am working on this on my own,
-there might be times where I forget to update this documentation, be aware of possible misinformation!
+> **⚠️ WARNING**  
+> This documentation is maintained by a single developer and may occasionally become outdated. Please verify against the codebase when in doubt.
 
 ## Entity Component System
 

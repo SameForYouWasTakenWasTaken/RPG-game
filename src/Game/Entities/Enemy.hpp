@@ -10,13 +10,14 @@
 #include "Components/Sprite.hpp"
 #include "Components/Enemy.hpp"
 #include "Default.hpp"
+#include "Components/LonelyTags.hpp"
 
 namespace Game::Entities
 {
     struct EnemyTag
     {};
     
-    static inline auto EnemyTextureHandle = Systems::ResourceManager::LoadTexture(RESOURCES_DIRECTORY "Textures/enemy.jpg");
+    static inline auto EnemyTextureHandle = Systems::ResourceManager::LoadTexture(RESOURCES_DIRECTORY "Shared/Textures/enemy.jpg");
     
     /**
      * @brief Creates and configures a new enemy entity in the provided registry.
@@ -50,12 +51,15 @@ namespace Game::Entities
         
         Geometry = Core::Components::CreateDefaultGeometry(texture, sf::Color::White);
 
-        registry.emplace<Game::Components::Sprite>(entity, EnemyTextureHandle); 
+        auto& sprite = registry.emplace<Game::Components::Sprite>(entity, EnemyTextureHandle); 
+        sprite.zIndex = 10;
+        
         registry.emplace<EnemyTag>(entity);
 
         Transform.Scale({150.f, 150.f});
         Transform.SetOrigin(Transform.GetLocalSize() / 2.f);
 
+        registry.emplace<Game::Components::LonelyTags::Spatial>(entity);
         return entity;
     }
 }

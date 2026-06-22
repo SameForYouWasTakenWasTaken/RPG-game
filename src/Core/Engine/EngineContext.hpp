@@ -7,5 +7,6 @@ namespace Core
     struct EngineContext
     {
         Rendering::Window* ActiveWindow;
+        sf::ContextSettings SFContext;
     };
 }

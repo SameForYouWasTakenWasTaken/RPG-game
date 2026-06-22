@@ -1,4 +1,7 @@
 #include "Scene.hpp"
+
+#include "imgui.h"
+#include "imgui_internal.h"
 #include "Engine/Systems/ISystem.hpp"
 
 namespace Game
@@ -46,7 +49,7 @@ namespace Game
     void Scene::OnUpdate(float dt)
     {
         eventBus.Update();
-        
+
         for (auto& layer : m_Layers)
             layer->OnUpdate(dt);
     
@@ -81,7 +84,10 @@ namespace Game
     void Scene::OnRender()
     {
         for (auto& layer : m_Layers)
+        {
+            assert(ImGui::GetCurrentContext()->WithinFrameScope == true);
             layer->OnRender();
+        }
     }
 
     void Scene::OnDetach()
@@ -106,5 +112,15 @@ namespace Game
         m_SystemsScheduler.Add(Inventory);
         m_SystemsScheduler.Add(Progression);
         m_SystemsScheduler.Add(Reward);
+        
+        m_SystemsScheduler.Add(SpatialGrid)
+            .After(hierarchy)
+            .After(Movement)
+            .After(AI)
+            .After(Combat)
+            .After(Inventory)
+            .After(Pickup)
+            .After(Progression)
+            .After(Reward);
     }
 }

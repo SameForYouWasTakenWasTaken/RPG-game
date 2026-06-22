@@ -15,6 +15,7 @@
 #include "Systems/PickupSystem.hpp"
 #include "Systems/ProgressionSystem.hpp"
 #include "Systems/RewardSystem.hpp"
+#include "Systems/SpatialGrid.hpp"
 #include "vendor/entt/entt.hpp"
 
 namespace Game::Layers
@@ -32,17 +33,19 @@ namespace Game
         entt::registry registry{};
 
         // Required systems
+        Game::Systems::SpatialGrid SpatialGrid{registry};
         Core::Events::EventBus eventBus;
         Game::Systems::Hierarchy hierarchy;
         
         // Basic systems
-        Game::Systems::AISystem AI{registry, eventBus};
+        Game::Systems::AISystem AI{registry, eventBus, SpatialGrid};
+        Game::Systems::Pickup Pickup{registry, SpatialGrid};
+        
         Game::Systems::Combat Combat{registry, eventBus};
         Game::Systems::Progression Progression{registry, eventBus};
         Game::Systems::Reward Reward{registry, eventBus};
-
+        
         Game::Systems::Inventory Inventory{registry};
-        Game::Systems::Pickup Pickup{registry};
         Game::Systems::Movement Movement{registry};
         
         Scene();
