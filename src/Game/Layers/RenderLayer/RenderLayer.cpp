@@ -1,4 +1,6 @@
 #include "RenderLayer.hpp"
+
+#include "imgui-SFML.h"
 #include "Engine/Engine.hpp"
 #include "tracy/Tracy.hpp"
 #include "Engine/Components/Transform.hpp"
@@ -10,6 +12,7 @@ namespace Game::Layers
     void RenderLayer::OnRender()
     {
         ZoneScoped;
+        auto& engineContext = Core::Engine::Get().GetContext();
         Core::Rendering::Renderer *renderer = Core::Engine::Get().GetRenderer();
 
         auto &registry = m_Scene->registry;
@@ -37,8 +40,8 @@ namespace Game::Layers
                                               &transform, &geometry};
             obj.zIndex = sprite.zIndex;
             renderer->Submit(obj);
-      }
+        }
 
-      renderer->End();
+        renderer->End();
     }
 }

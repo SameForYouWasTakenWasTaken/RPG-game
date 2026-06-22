@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.30)
+cmake_minimum_required(VERSION 4.1.2)
 project(main)
 
 set(CMAKE_CXX_STANDARD 23)
@@ -15,7 +15,6 @@ set(RESOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/Game/Resources")
 add_subdirectory(src)
 
 include(Dependencies.cmake)
-
 
 add_executable(main src/main.cpp)
 target_link_libraries(main PUBLIC Game)

@@ -15,11 +15,14 @@ namespace Core::Rendering
         assert(settings.width >= 0);
         assert(settings.height >= 0);
 
+        auto& sfContext = Engine::Get().GetContext().SFContext;
+
         m_Window = sf::RenderWindow(
             sf::VideoMode({m_Data.width, m_Data.height}), 
             m_Data.title,
             m_Data.style,
-            m_Data.state
+            m_Data.state,
+            sfContext
         );
 
         sf::Vector2f size = {

@@ -28,7 +28,7 @@ namespace Core
         }
         
         void Init(Rendering::Window& window);
-        void HandleEvents(std::optional<sf::Event> event);
+        void HandleEvents(const std::optional<sf::Event>& event);
 
         EngineContext& GetContext() { return m_Context; }
         Events::EventBus& GetEventBus() { return m_EventBus; }

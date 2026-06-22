@@ -10,9 +10,13 @@
 #include "Layers/RenderLayer/RenderLayer.hpp"
 #include <memory>
 
+#include "imgui-SFML.h"
+#include "imgui.h"
+#include "imgui_internal.h"
 #include "Engine/Events/InputEvent.hpp"
 #include "Engine/Events/WindowCloseEvent.hpp"
 #include "Engine/Events/MouseEvent.hpp"
+#include "Layers/UI/Debug/DefaultDebug.hpp"
 #include "tracy/Tracy.hpp"
 
 using namespace Core::Events;
@@ -29,6 +33,8 @@ namespace Game
         Core::Engine& engine = Core::Engine::Get();
         engine.Init(m_Window);
 
+        if (!ImGui::SFML::Init(m_Window.GetRenderWindow()))
+            throw std::runtime_error("SFML Init Failed");
     }
     
     void Application::Run()
@@ -38,17 +44,18 @@ namespace Game
         Core::EngineContext& context = engine.GetContext(); 
 
         Scene MainScene;
-
         auto MainLayer = std::make_shared<Layers::MainLayer>();
         auto RenderLayer = std::make_shared<Layers::RenderLayer>();
+        auto DebugLayer = std::make_shared<Layers::DefaultDebug>();
+
         MainScene.AddLayer(MainLayer);
         MainScene.AddLayer(RenderLayer);
+        MainScene.AddLayer(DebugLayer);
 
         sf::Clock clock;
         float then = clock.getElapsedTime().asSeconds();
         
         constexpr float MAX_DELTA = .05f;
-        constexpr int MAX_EVENTS = 50;
         constexpr float STEP = 1.f / 60.f;
 
         while (m_Window.IsOpen())
@@ -59,18 +66,29 @@ namespace Game
             then = now;
             
             int count = 0;
-            while ((PollEvents(MainScene, m_Window.PollEvents())) && count < MAX_EVENTS) {
+            while (PollEvents(MainScene, m_Window.PollEvents())) {
                 ++count;
             }
 
+            // 2. START THE FRAME HERE.
+            // This turns WithinFrameScope to TRUE before anything else runs.
+            ImGui::SFML::Update(m_Window.GetRenderWindow(), sf::seconds(dt));
+
+            // 3. Now these are 100% safe, even if they contain ImGui logic!
+            assert(ImGui::GetCurrentContext()->WithinFrameScope == true);
+            MainScene.OnUpdate(dt);
+
+            assert(ImGui::GetCurrentContext()->WithinFrameScope == true);
+            MainScene.OnFixed(STEP);
+
+            // 4. Render pass
             m_Window.Clear();
 
-            MainScene.OnUpdate(dt);
-            MainScene.OnFixed(STEP);
             MainScene.OnRender();
 
+            ImGui::SFML::Render(m_Window.GetRenderWindow());
             m_Window.Display();
-            
+
             FrameMark;
         }
 
@@ -83,6 +101,8 @@ namespace Game
         
         auto& eventBus = scene.eventBus;
         auto& engine = Core::Engine::Get();
+        ImGui::SFML::ProcessEvent(m_Window.GetRenderWindow(), event.value());
+
 
         if (IsSFMLEvent<sf::Event::Closed>(event))
             eventBus.Queue<WindowCloseEvent>();

@@ -6,7 +6,6 @@ namespace Game::Layers
 {
     class RenderLayer : public ILayer
     {
-
     public:
         RenderLayer() = default;
 
