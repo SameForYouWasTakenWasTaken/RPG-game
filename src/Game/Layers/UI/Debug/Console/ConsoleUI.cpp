@@ -83,7 +83,7 @@ namespace Game::UI
                     backend::Console::Println("pong!");
                 }
                 else {
-                    backend::Console::Println("[ERROR] Unknown command: ", command);
+                    backend::Console::Println("[ERROR] Unknown command: " + command);
                 }
             }
 
