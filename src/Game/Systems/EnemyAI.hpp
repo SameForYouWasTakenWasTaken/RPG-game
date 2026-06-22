@@ -24,7 +24,7 @@ namespace Game::Systems
         static bool CanEnemyDetect(entt::registry& r, entt::entity enemy, entt::entity other);
         static bool CanEnemyHear(entt::registry& r, entt::entity enemy, entt::entity other);
         static bool CanEnemySee(entt::registry& r, entt::entity enemy, entt::entity other);
-        
+
         inline bool CanEnemyDetect(entt::entity enemy, entt::entity other);
         inline bool CanEnemyHear(entt::entity enemy, entt::entity other);
         inline bool CanEnemySee(entt::entity enemy, entt::entity other);

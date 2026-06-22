@@ -43,6 +43,7 @@ namespace Core::Rendering
             auto& batch = it->second;
             batch.zIndex = Object.zIndex;
 
+
             const sf::Transform transform = Object.Transform->ToSFML();
             const auto& src = Object.Geometry->vertices;
 
